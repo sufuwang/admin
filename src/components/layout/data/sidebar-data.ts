@@ -1,28 +1,9 @@
 import {
-  // Construction,
   LayoutDashboard,
-  // Monitor,
-  // Bug,
-  ListTodo,
-  // FileX,
-  // HelpCircle,
-  // Lock,
-  // Bell,
-  // Package,
-  // Palette,
-  // ServerOff,
-  // Settings,
-  // Wrench,
-  // UserCog,
-  // UserX,
-  // Users,
-  // MessagesSquare,
-  // ShieldCheck,
-  // AudioWaveform,
+  Wallet,
   Command,
-  // GalleryVerticalEnd,
+  ChartCandlestick,
 } from 'lucide-react'
-// import { ClerkLogo } from '@/assets/clerk-logo'
 import { type SidebarData } from '../types'
 
 export const sidebarData: SidebarData = {
@@ -53,14 +34,19 @@ export const sidebarData: SidebarData = {
       title: 'General',
       items: [
         {
-          title: 'Dashboard',
+          title: '大盘',
           url: '/',
           icon: LayoutDashboard,
         },
         {
-          title: 'Tasks',
-          url: '/tasks',
-          icon: ListTodo,
+          title: '流水',
+          url: '/asserts',
+          icon: Wallet,
+        },
+        {
+          title: '投资',
+          url: '/investment',
+          icon: ChartCandlestick,
         },
         // {
         //   title: 'Apps',
