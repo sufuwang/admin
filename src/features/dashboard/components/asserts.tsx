@@ -12,9 +12,7 @@ import { data as AssetsData } from '@/data/asserts'
 
 export default function Asserts() {
     return <>
-        <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
-            <NumberCardList data={AssetsData} />
-        </div>
+        <NumberCardList data={AssetsData} />
         <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
             <Card className='col-span-1 lg:col-span-4'>
             <CardHeader>

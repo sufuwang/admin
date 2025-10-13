@@ -16,10 +16,7 @@ export default function Asserts() {
   const [curYear, setYear] = useState(+defaultYear)
 
   return <Main>
-    <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-5'>
-      <NumberCardList data={AssetsData} />
-    </div>
-
+    <NumberCardList data={AssetsData} />
     <div className='mt-8 grid gap-4 sm:grid-cols-1 lg:grid-cols-1 overflow-hidden'>
       <Tabs
         orientation='vertical'
