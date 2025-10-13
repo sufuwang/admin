@@ -1,7 +1,6 @@
 import {
   LayoutDashboard,
   Wallet,
-  Command,
   ChartCandlestick,
 } from 'lucide-react'
 import { type SidebarData } from '../types'
@@ -10,24 +9,14 @@ export const sidebarData: SidebarData = {
   user: {
     name: 'satnaing',
     email: 'satnaingdev@gmail.com',
-    avatar: '/avatars/shadcn.jpg',
+    avatar: '/images/favicon.jpg',
   },
   teams: [
     {
-      name: 'Shadcn Admin',
-      logo: Command,
-      plan: 'Vite + ShadcnUI',
+      name: 'Sufu.Wang',
+      logo: '/images/favicon.jpg',
+      plan: '',
     },
-    // {
-    //   name: 'Acme Inc',
-    //   logo: GalleryVerticalEnd,
-    //   plan: 'Enterprise',
-    // },
-    // {
-    //   name: 'Acme Corp.',
-    //   logo: AudioWaveform,
-    //   plan: 'Startup',
-    // },
   ],
   navGroups: [
     {
