@@ -20,11 +20,11 @@ export default function Asserts() {
       <NumberCardList data={AssetsData} />
     </div>
 
-    <div className='mt-8 grid gap-4 sm:grid-cols-1 lg:grid-cols-1'>
+    <div className='mt-8 grid gap-4 sm:grid-cols-1 lg:grid-cols-1 overflow-hidden'>
       <Tabs
         orientation='vertical'
         defaultValue={Comps[0].key}
-        className='space-y-2'
+        className='w-full overflow-x-auto space-y-2'
       >
         <div className='w-full overflow-x-auto flex justify-between'>
           <TabsList>
