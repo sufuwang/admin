@@ -16,8 +16,7 @@ export function Dashboard() {
   
   return (
     <>
-      <Header>
-      </Header>
+      <Header />
       <Main>
         <Tabs
           orientation='vertical'

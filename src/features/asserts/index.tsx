@@ -10,6 +10,7 @@ import {
   OutcomeTable as OutcomeTableData,
   NumberCardListData,
 } from '@/data/asserts'
+import { Header } from '@/components/layout/header'
 
 const Comps = [
   { key: 'Balance', label: '资产负债表', comp: BalanceTable, data: BalanceTableData },
@@ -20,24 +21,27 @@ const Comps = [
 export default function Asserts() {
   const [curYear, setYear] = useState(+defaultYear)
 
-  return <Main>
-    <NumberCardList data={NumberCardListData} />
-    <div className='mt-8 grid gap-4 sm:grid-cols-1 lg:grid-cols-1 overflow-hidden'>
-      <Tabs
-        orientation='vertical'
-        defaultValue={Comps[0].key}
-        className='w-full overflow-x-auto space-y-2'
-      >
-        <div className='w-full overflow-x-auto flex justify-between'>
-          <TabsList>
-            {Comps.map(row => <TabsTrigger key={row.key} value={row.key}>{row.label}</TabsTrigger>)}
-          </TabsList>
-          <YearPicker onChange={(d) => setYear(d)} />
-        </div>
-        {Comps.map(row => <TabsContent className='space-y-4' key={row.key} value={row.key}>
-          {row.comp({ data: row.data.filter(d => curYear === 0 ? true : d.year === curYear) })}
-        </TabsContent>)}
-      </Tabs>
-    </div>
-  </Main>
+  return <>
+    <Header />
+    <Main>
+      <NumberCardList data={NumberCardListData} />
+      <div className='mt-8 grid gap-4 sm:grid-cols-1 lg:grid-cols-1 overflow-hidden'>
+        <Tabs
+          orientation='vertical'
+          defaultValue={Comps[0].key}
+          className='w-full overflow-x-auto space-y-2'
+        >
+          <div className='w-full overflow-x-auto flex justify-between'>
+            <TabsList>
+              {Comps.map(row => <TabsTrigger key={row.key} value={row.key}>{row.label}</TabsTrigger>)}
+            </TabsList>
+            <YearPicker onChange={(d) => setYear(d)} />
+          </div>
+          {Comps.map(row => <TabsContent className='space-y-4' key={row.key} value={row.key}>
+            {row.comp({ data: row.data.filter(d => curYear === 0 ? true : d.year === curYear) })}
+          </TabsContent>)}
+        </Tabs>
+      </div>
+    </Main>
+  </>
 }
