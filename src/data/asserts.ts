@@ -191,7 +191,6 @@ export const OutcomeTable: TOutcomeTableRow[] = [
     foodOutcome: 1403.5,
     relativeOutcome: 1268.48,
     otherOutcome: 1927.18,
-    comment: '电视(1717)、iPhone 14(2981)'
   },
   {
     year: 2025,
@@ -275,7 +274,6 @@ export const BalanceTable: TBalanceTableRow[] = [
       { abbr: 'CNY', value: 201332.35, MoM: 33175.88 },
     ],
     loans: [],
-    comment: '',
   },
   {
     year: 2025,
@@ -363,7 +361,7 @@ export const NumberCardListData = (() => {
   if (lastHKDRow) {
     rows.push({
       title: '港币余额',
-      value: formatNumber(lastHKDRow.value),
+      value: formatNumber(lastHKDRow.value, 'HKD'),
       description: `较上月增长 ${formatNumber(lastHKDRow.MoM || 0)}<br />较去年同期增长 ${formatNumber(lastHKDRow.YoY || 0)}`,
     })
   }

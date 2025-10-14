@@ -17,16 +17,16 @@ export interface NumberCardListProps {
 
 const NumberCardItem = (props: NumberCardItemProps) => {
   return (
-    <Card>
-      <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+    <Card className={`${isMobile() && 'gap-2 py-4'}`}>
+      <CardHeader className={`flex flex-row items-center justify-between space-y-0 pb-2 ${isMobile() && 'px-4'}`}>
         <CardTitle className='text-sm font-medium'>
           {props.data.title}
         </CardTitle>
         {props.data.icon}
       </CardHeader>
-      <CardContent>
-        <div className='text-2xl font-bold'>{props.data.value}</div>
-        {props.data.description && !isMobile() && (
+      <CardContent className={`${isMobile() && 'px-4'}`}>
+        <div className={`${isMobile() ? 'text-xl' : 'text-2xl'} font-bold`}>{props.data.value}</div>
+        {props.data.description && (
           <p className='text-muted-foreground text-xs' dangerouslySetInnerHTML={{ __html: props.data.description.replace(/\n/g, '<br/>') }} />
         )}
       </CardContent>
