@@ -1,55 +1,97 @@
-import Table from '@/components/base-table'
+import { type ColumnDef } from '@tanstack/react-table'
 import {
-  BalanceTable as BalanceTableData,
-  IncomeTable as IncomeTableData,
-  OutcomeTable as OutcomeTableData,
   type TBalanceTableRow,
   type TIncomeTableRow,
-  type TOutcomeTableRow
+  type TOutcomeTableRow,
 } from '@/data/asserts'
-import { type ColumnDef } from "@tanstack/react-table"
-import { ColumnKeys, getColumnAlias } from '@/lib/const'
+import { ColumnKeys, getColumnAlias, type TCurrency } from '@/lib/const'
+import { formatNumber } from '@/lib/utils'
+import Table from '@/components/base-table'
 
-function renderTable<T extends (TBalanceTableRow | TIncomeTableRow | TOutcomeTableRow)>(TableData: T[], year: number) {
-  const data = TableData.filter(row => row.year === year).map((row) => {
-    const data: Record<string, unknown> = {}
-    Object.keys(row).forEach((key) => {
-      if (key === 'balances') {
-        (row as TBalanceTableRow)['balances'].forEach((balance) => {
-          data[`balance_${balance.abbr}`] = balance.value
-          data[`balance_${balance.abbr}_MoM`] = balance.MoM
-          data[`balance_${balance.abbr}_YoY`] = balance.YoY
-        })
-      } else if (key === 'loans' && Array.isArray((row as TBalanceTableRow)['loans'])) {
-        ((row as TBalanceTableRow)['loans'] ?? []).forEach((loan) => {
-          data[loan.header] = loan.value
-        })
-      } else {
-        data[key] = row[key as keyof T]
-      }
+function renderTable<
+  T extends TBalanceTableRow | TIncomeTableRow | TOutcomeTableRow,
+>(TableData: T[]) {
+  // 处理表格数据
+  const data = TableData
+    .map((row) => {
+      const data: Record<string, unknown> = {}
+      Object.keys(row).forEach((key) => {
+        if (key === 'balances') {
+          ;(row as TBalanceTableRow)['balances']?.forEach((balance) => {
+            data[`balance_${balance.abbr}`] = balance.value
+            data[`balance_${balance.abbr}_MoM`] = balance.MoM
+            data[`balance_${balance.abbr}_YoY`] = balance.YoY
+          })
+        } else if (
+          key === 'loans' &&
+          Array.isArray((row as TBalanceTableRow)['loans'])
+        ) {
+          ;((row as TBalanceTableRow)['loans'] ?? []).forEach((loan) => {
+            data[loan.header] = loan.value
+          })
+        } else {
+          data[key] = row[key as keyof T]
+        }
+      })
+      return data
     })
-    return data
-  })
   if (data.length === 0) {
-    return <div>No data for {year}</div>
+    return <div>No data</div>
   }
-  const columns: ColumnDef<typeof data[number]>[] = Object.keys(data[0]).map(accessorKey => ({
-    accessorKey,
-    header: ColumnKeys[accessorKey as keyof typeof ColumnKeys] || getColumnAlias(accessorKey) || accessorKey,
-    cell: ({ row }) => row.getValue(accessorKey) ?? '-',
-  }))
+  // 处理头部
+  const _d = (data as TBalanceTableRow[]).reduce(
+    (prev: TBalanceTableRow, curr) => {
+      const d = { ...prev, ...curr }
+      if ((curr.balances ?? []).length > (prev.balances ?? []).length) {
+        d.balances = curr.balances
+      }
+      if ((curr.loans ?? []).length > (prev.loans ?? []).length) {
+        d.loans = curr.loans
+      }
+      return d
+    },
+    data[0] as TBalanceTableRow
+  )
+  const columns: ColumnDef<(typeof data)[number]>[] = Object.keys(_d)
+    .reduce((arr, cur) => {
+      if (arr.at(-1) === 'comment') {
+        return [...arr.slice(0, -1), cur, 'comment']
+      }
+      return [...arr, cur]
+    }, [] as string[])
+    .map(
+      (accessorKey) => ({
+        accessorKey,
+        header:
+          ColumnKeys[accessorKey as keyof typeof ColumnKeys] ||
+          getColumnAlias(accessorKey) ||
+          accessorKey,
+        cell: ({ row }) => {
+          if (
+            accessorKey.endsWith('Income') ||
+            accessorKey.endsWith('Outcome') ||
+            accessorKey.startsWith('balance_') ||
+            accessorKey.startsWith('total') ||
+            ['剩余房贷', '房贷还款'].includes(accessorKey)
+          ) {
+            return formatNumber(row.getValue(accessorKey), accessorKey.split('_')[1] as TCurrency['abbr'])
+          }
+          return row.getValue(accessorKey) ?? '-'
+        },
+      })
+    )
   return <Table data={data} columns={columns} />
 }
 
 interface Props {
-  year: number
+  data: (TBalanceTableRow | TIncomeTableRow | TOutcomeTableRow)[]
 }
-export function BalanceTable({ year }: Props) {
-  return renderTable(BalanceTableData, year)
+export function BalanceTable({ data }: Props) {
+  return renderTable(data)
 }
-export function IncomeTable({ year }: Props) {
-  return renderTable(IncomeTableData, year)
+export function IncomeTable({ data }: Props) {
+  return renderTable(data)
 }
-export function OutcomeTable({ year }: Props) {
-  return renderTable(OutcomeTableData, year)
+export function OutcomeTable({ data }: Props) {
+  return renderTable(data)
 }

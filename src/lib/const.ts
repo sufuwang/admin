@@ -28,10 +28,11 @@ export const Currencies = [
 export type TCurrency = (typeof Currencies)[number]
 
 export const ColumnKeys = {
+  year: '年份',
   month: '月份',
   totalIncome: '总收入',
   totalOutcome: '总支出',
-  pureTotalIncome: '净收入',
+  totalPureIncome: '净收入',
   comment: '备注',
   wageIncome: '工资收入',
   fundIncome: '基金收入',
@@ -45,7 +46,9 @@ export const ColumnKeys = {
   relativeOutcome: '亲属支出',
   specialOutcome: '特殊支出',
   bulkOutcome: '大宗支出',
+  otherOutcome: '其他支出'
 } as const
+export type TColumnKeys = keyof typeof ColumnKeys
 export const getColumnAlias = (name: string) => {
   if (name.startsWith('balance_')) {
     const parts = name.split('_')

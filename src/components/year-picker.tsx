@@ -10,11 +10,11 @@ interface Props {
   onChange: (year: number) => void
 }
 
-const Years = ['2025']
-export const defaultYear = Years[0]
+const Years = ['全部数据', '2025']
+export const defaultYear = Years[1]
 
 export default function YearPicker({ onChange }: Props) {
-  return <Select defaultValue={defaultYear} onValueChange={(d) => onChange(+d)}>
+  return <Select defaultValue={defaultYear} onValueChange={(d) => onChange(d === Years[0] ? 0 : +d)}>
     <SelectTrigger>
       <SelectValue placeholder="YYYY" />
     </SelectTrigger>

@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import { type TCurrency } from './const'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -62,4 +63,14 @@ export function getPageNumbers(currentPage: number, totalPages: number) {
 export function isMobile() {
   return /Android|iPhone|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   // return /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+export function formatNumber(value: number = 0, currency: TCurrency['abbr'] | '%' = 'CNY') {
+  if (currency === '%') {
+    return `${(value * 100).toFixed(2)}%`
+  }
+  return new Intl.NumberFormat('zh-CN', {
+    style: 'currency',
+    currency,
+  }).format(value)
 }
