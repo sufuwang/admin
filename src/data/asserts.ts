@@ -381,11 +381,11 @@ export const NumberCardListData = (() => {
     }
   ])
   const _IncomeTableSum = Object.entries(IncomeTableSum)
-  const maxIncome = _IncomeTableSum.reduce((prev, cur) => cur[1] > prev[1] ? cur : prev, _IncomeTableSum[0])
+  const maxIncome = _IncomeTableSum.filter(row => row[0] !== 'investmentIncome').reduce((prev, cur) => cur[1] > prev[1] ? cur : prev, _IncomeTableSum[0])
   rows.push({
     title: '最大收入占比',
     value: formatNumber(maxIncome[1] / totalIncome, '%'),
-    description: `${ColumnKeys[maxIncome[0] as TColumnKeys]}为今年收入的主要来源`,
+    description: `${ColumnKeys[maxIncome[0] as TColumnKeys]}为今年收入的主要来源（除投资收入）`,
   })
   // const [, wageIncome] = _IncomeTableSum.find(row => row[0] === 'wageIncome') ?? ['', 0]
   // rows.push({
@@ -404,7 +404,7 @@ export const NumberCardListData = (() => {
   rows.push({
     title: '最大支出占比',
     value: formatNumber(maxOutcome[1] / totalOutcome, '%'),
-    description: `${ColumnKeys[maxOutcome[0] as TColumnKeys]}为今年支出的主要来源（除贷款）`,
+    description: `${ColumnKeys[maxOutcome[0] as TColumnKeys]}为今年支出的主要来源（除房贷还款支出）`,
   })
   const [, loansOutcome] = _OutcomeTableSum.find(row => row[0] === 'loans') ?? ['', 0]
   rows.push({
