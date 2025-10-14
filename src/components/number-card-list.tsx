@@ -1,3 +1,4 @@
+import { isMobile } from '@/lib/utils'
 import { Card, CardTitle, CardHeader, CardContent } from './ui/card'
 import { Empty } from './ui/empty'
 
@@ -40,10 +41,12 @@ const NumberCardItem = (props: NumberCardItemProps) => {
       </CardHeader>
       <CardContent>
         <div className='text-2xl font-bold'>{props.data.value}</div>
-        <p className='text-muted-foreground text-xs'>
-          +20.1% from last month
-          {props.data.description}
-        </p>
+        {!isMobile() && (
+          <p className='text-muted-foreground text-xs'>
+            +20.1% from last month
+            {props.data.description}
+          </p>
+        )}
       </CardContent>
     </Card>
   )
@@ -51,13 +54,13 @@ const NumberCardItem = (props: NumberCardItemProps) => {
 
 export default function NumberCardList(props: NumberCardListProps) {
   if (props.data && props.data.length > 0) {
-    return <div className='grid gap-4 grid-cols-2 lg:grid-cols-4'>
-      {
-        props.data.map((data, index) => (
+    return (
+      <div className='grid grid-cols-2 gap-4 lg:grid-cols-4'>
+        {props.data.map((data, index) => (
           <NumberCardItem key={index} data={data} />
-        ))
-      }
-    </div>
+        ))}
+      </div>
+    )
   }
   return <Empty />
 }

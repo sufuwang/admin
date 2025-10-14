@@ -58,3 +58,8 @@ export function getPageNumbers(currentPage: number, totalPages: number) {
 
   return rangeWithDots
 }
+
+export function isMobile() {
+  return /Android|iPhone|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  // return /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
