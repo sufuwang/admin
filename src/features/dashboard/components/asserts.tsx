@@ -7,12 +7,11 @@ import {
 } from '@/components/ui/card'
 import { Overview } from './overview'
 import { RecentSales } from './recent-sales'
-import NumberCardList from '@/components/number-card-list'
-import { data as AssetsData } from '@/data/asserts'
+// import NumberCardList from '@/components/number-card-list'
 
 export default function Asserts() {
     return <>
-        <NumberCardList data={AssetsData} />
+        {/* <NumberCardList data={AssetsData} /> */}
         <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
             <Card className='col-span-1 lg:col-span-4'>
             <CardHeader>
