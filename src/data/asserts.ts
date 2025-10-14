@@ -63,7 +63,7 @@ export const IncomeTable: TIncomeTableRow[] = [
     investmentIncome: -1528.46,
     otherIncome: 1800,
     transferIncome: 29278.54,
-    comment: '川发押金（800)、闲亭赔偿（1000)'
+    comment: '川发押金（800）、闲亭赔偿（1000）'
   },
   {
     year: 2025,
@@ -181,7 +181,7 @@ export const OutcomeTable: TOutcomeTableRow[] = [
     relativeOutcome: 599.14,
     bulkOutcome: 4698,
     otherOutcome: 156.4,
-    comment: '电视(1717)、iPhone 14(2981)'
+    comment: '电视（1717）、iPhone 14（2981）'
   },
   {
     year: 2025,
@@ -202,7 +202,7 @@ export const OutcomeTable: TOutcomeTableRow[] = [
     specialOutcome: 1120,
     bulkOutcome: 6600,
     otherOutcome: 528.65,
-    comment: '堂租金（3846.36)、吴刚吃饭（993)、香港金项链（6600）'
+    comment: '桐堂租金（3846.36）、吴刚吃饭（993）、香港金项链（6600）'
   },
   {
     year: 2025,
@@ -225,7 +225,7 @@ export const OutcomeTable: TOutcomeTableRow[] = [
     specialOutcome: 6000,
     bulkOutcome: 0,
     otherOutcome: -2811.11,
-    comment: '西安小区物业费（5500)、曾（6000)、桐堂租金（4280.37）'
+    comment: '西安小区物业费（5500）、曾（6000)、桐堂租金（4280.37）'
   },
 ].map(row => {
   const outcomeSum = Object.entries(row)
