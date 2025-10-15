@@ -10,7 +10,7 @@ import {
   OutcomeTable as OutcomeTableData,
   NumberCardListData,
 } from '@/data/asserts'
-import { Header } from '@/components/layout/header'
+import DashboardHeader from '@/components/dashboard-header'
 
 const Comps = [
   { key: 'Balance', label: '资产负债表', comp: BalanceTable, data: BalanceTableData },
@@ -22,7 +22,7 @@ export default function Asserts() {
   const [curYear, setYear] = useState(+defaultYear)
 
   return <>
-    <Header />
+    <DashboardHeader />
     <Main>
       <NumberCardList data={NumberCardListData} />
       <div className='mt-8 grid gap-4 sm:grid-cols-1 lg:grid-cols-1 overflow-hidden'>

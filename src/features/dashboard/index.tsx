@@ -1,9 +1,9 @@
 // import { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { Analytics } from './components/analytics'
 import Asserts from './components/asserts'
+import DashboardHeader from '@/components/dashboard-header'
 // import YearPicker from '@/components/year-picker'
 
 const Comps = [
@@ -16,7 +16,7 @@ export function Dashboard() {
   
   return (
     <>
-      <Header />
+      <DashboardHeader />
       <Main>
         <Tabs
           orientation='vertical'
