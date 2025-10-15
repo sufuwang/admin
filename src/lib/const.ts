@@ -50,7 +50,7 @@ export const ColumnKeys = {
 } as const
 export type TColumnKeys = keyof typeof ColumnKeys
 export const getColumnAlias = (name: string) => {
-  if (name.startsWith('balance_')) {
+  if (name.startsWith('balances_')) {
     const parts = name.split('_')
     if (parts.length === 2) {
       const [_, abbr] = parts
@@ -64,6 +64,8 @@ export const getColumnAlias = (name: string) => {
         if (suffix === 'YoY') return `${currency.name}余额同比`
       }
     }
+  } else if (name.includes('_')) {
+    return name.split('_').at(-1)
   }
   return name
 }

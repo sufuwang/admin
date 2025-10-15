@@ -17,9 +17,9 @@ function renderTable<
       Object.keys(row).forEach((key) => {
         if (key === 'balances') {
           ;(row as TBalanceTableRow)['balances']?.forEach((balance) => {
-            data[`balance_${balance.abbr}`] = balance.value
-            data[`balance_${balance.abbr}_MoM`] = balance.MoM
-            data[`balance_${balance.abbr}_YoY`] = balance.YoY
+            data[`balances_${balance.abbr}`] = balance.value
+            data[`balances_${balance.abbr}_MoM`] = balance.MoM
+            data[`balances_${balance.abbr}_YoY`] = balance.YoY
           })
         } else if (
           key === 'loans' &&
@@ -61,15 +61,18 @@ function renderTable<
     .map(
       (accessorKey) => ({
         accessorKey,
-        header:
-          ColumnKeys[accessorKey as keyof typeof ColumnKeys] ||
-          getColumnAlias(accessorKey) ||
-          accessorKey,
+        header: <>
+          {
+            ColumnKeys[accessorKey as keyof typeof ColumnKeys] ||
+            getColumnAlias(accessorKey) ||
+            accessorKey
+          }
+        </>,
         cell: ({ row }) => {
           if (
             accessorKey.endsWith('Income') ||
             accessorKey.endsWith('Outcome') ||
-            accessorKey.startsWith('balance_') ||
+            accessorKey.startsWith('balances_') ||
             accessorKey.startsWith('total') ||
             ['剩余房贷', '房贷还款'].includes(accessorKey)
           ) {
@@ -77,7 +80,7 @@ function renderTable<
           }
           return row.getValue(accessorKey) ?? '-'
         },
-        calcTotal: !['year', 'month', 'comment', '剩余房贷'].includes(accessorKey) && !accessorKey.startsWith('balance_'),
+        calcTotal: !['year', 'month', 'comment', '剩余房贷'].includes(accessorKey) && !accessorKey.startsWith('balances_'),
       })
     )
   return <Table data={data} columns={columns} />

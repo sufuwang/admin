@@ -26,12 +26,7 @@ export const IncomeTable: TIncomeTableRow[] = [
     month: 'January',
     wageIncome: 8953.5,
     fundIncome: 4800,
-    partTimeIncome: 0,
-    investmentIncome: 0,
-    otherIncome: 0,
-    totalPureIncome: 0,
     transferIncome: 33146.79,
-    totalIncome: 0,
   },
   {
     year: 2025,
@@ -72,7 +67,6 @@ export const IncomeTable: TIncomeTableRow[] = [
     fundIncome: 960,
     partTimeIncome: 1000,
     investmentIncome: 581.31,
-    otherIncome: 0,
     transferIncome: 22502.04,
   },
   {
@@ -80,7 +74,6 @@ export const IncomeTable: TIncomeTableRow[] = [
     month: 'July',
     wageIncome: 7104.89,
     fundIncome: 960,
-    partTimeIncome: 0,
     investmentIncome: 512.31,
     otherIncome: 1000,
     transferIncome: 14694.88,
@@ -100,9 +93,22 @@ export const IncomeTable: TIncomeTableRow[] = [
     transferIncome: 7120,
   },
 ].map(row => {
-  row.totalPureIncome = row.wageIncome + (row.fundIncome ?? 0) + (row.partTimeIncome ?? 0) + (row.investmentIncome ?? 0) + (row.otherIncome ?? 0)
-  row.totalIncome = row.totalPureIncome + row.transferIncome
-  return row as TIncomeTableRow
+  const totalPureIncome = row.wageIncome + (row.fundIncome ?? 0) + (row.partTimeIncome ?? 0) + (row.investmentIncome ?? 0) + (row.otherIncome ?? 0)
+  const totalIncome = totalPureIncome + row.transferIncome
+  const defaultValue = {
+    year: 0,
+    month: '',
+    wageIncome: 0,
+    fundIncome: 0,
+    partTimeIncome: 0,
+    investmentIncome: 0,
+    otherIncome: 0,
+    totalPureIncome,
+    transferIncome: 0,
+    totalIncome,
+    comment: '',
+  }
+  return Object.assign(defaultValue, row) as TIncomeTableRow
 })
 export type TIncomeTableSum = Record<Exclude<keyof TIncomeTableRow, 'year' | 'month' | 'totalIncome' | 'comment' | 'totalPureIncome'>, number>
 export const IncomeTableSum: TIncomeTableSum = {
@@ -232,8 +238,21 @@ export const OutcomeTable: TOutcomeTableRow[] = [
     .filter(([key]) => key.endsWith('Outcome'))
     .reduce((sum, [, value]) => sum + (Number(value) || 0), 0)
   const loanSum = row.loans?.reduce((sum, l) => sum + l.value, 0) ?? 0
-  row.totalOutcome = outcomeSum + loanSum
-  return row as TOutcomeTableRow
+  const defaultValue = {
+    year: 2025,
+    month: '',
+    totalOutcome: outcomeSum + loanSum,
+    loans: [],
+    houseOutcome: 0,
+    foodOutcome: 0,
+    transportOutcome: 0,
+    relativeOutcome: 0,
+    specialOutcome: 0,
+    bulkOutcome: 0,
+    otherOutcome: 0,
+    comment: ''
+  }
+  return Object.assign(defaultValue, row) as TOutcomeTableRow
 })
 export type TOutcomeTableSum = Record<Exclude<keyof TOutcomeTableRow, 'year' | 'month' | 'totalOutcome' | 'comment'>, number>
 export const OutcomeTableSum: TOutcomeTableSum = {
