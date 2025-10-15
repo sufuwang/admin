@@ -77,7 +77,7 @@ function renderTable<
           }
           return row.getValue(accessorKey) ?? '-'
         },
-        calcTotal: !['year', 'month', 'comment'].includes(accessorKey) && !accessorKey.startsWith('balance_'),
+        calcTotal: !['year', 'month', 'comment', '剩余房贷'].includes(accessorKey) && !accessorKey.startsWith('balance_'),
       })
     )
   return <Table data={data} columns={columns} />
