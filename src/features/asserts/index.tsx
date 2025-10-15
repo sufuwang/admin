@@ -90,7 +90,7 @@ export default function Asserts() {
                   value={row.key}
                 >
                   {row.comp({ data })}
-                  <LineChart dataKeys={row.dataKeys} complexDataKeys={row.complexDataKeys} data={data} />
+                  <LineChart id={row.key} dataKeys={row.dataKeys} complexDataKeys={row.complexDataKeys} data={data} />
                 </TabsContent>
               )
             })}

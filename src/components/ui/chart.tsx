@@ -258,15 +258,24 @@ function ChartLegendContent({
   payload,
   verticalAlign = "bottom",
   nameKey,
+  defaultValue = {},
+  onClickLegend
 }: React.ComponentProps<"div"> &
   Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> & {
     hideIcon?: boolean
     nameKey?: string
-  }) {
+  } & { defaultValue: Array<{ key: string, visible: boolean }>, onClickLegend: (k: string, v: boolean) => void }) {
   const { config } = useChart()
 
   if (!payload?.length) {
     return null
+  }
+
+  const [isVisible, setVisible] = React.useState(Object.fromEntries(defaultValue.map(row => [row.key, row.visible])))
+  const onClick = (key: string) => {
+    const v = isVisible[key]
+    setVisible({ ...isVisible, [key]: !v })
+    onClickLegend(key, !v)
   }
 
   return (
@@ -287,8 +296,10 @@ function ChartLegendContent({
             <div
               key={item.value}
               className={cn(
-                "[&>svg]:text-muted-foreground flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 whitespace-nowrap"
+                "[&>svg]:text-muted-foreground flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 whitespace-nowrap",
+                !isVisible[key] && 'line-through'
               )}
+              onClick={() => onClick(key)}
             >
               {itemConfig?.icon && !hideIcon ? (
                 <itemConfig.icon />
