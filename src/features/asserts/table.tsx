@@ -61,13 +61,9 @@ function renderTable<
     .map(
       (accessorKey) => ({
         accessorKey,
-        header: <>
-          {
-            ColumnKeys[accessorKey as keyof typeof ColumnKeys] ||
+        header: ColumnKeys[accessorKey as keyof typeof ColumnKeys] ||
             getColumnAlias(accessorKey) ||
-            accessorKey
-          }
-        </>,
+            accessorKey,
         cell: ({ row }) => {
           if (
             accessorKey.endsWith('Income') ||

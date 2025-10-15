@@ -45,7 +45,7 @@ export default function LineChart({ dataKeys, complexDataKeys = [], data }: Prop
         <ChartContainer config={chartConfig}>
             <RLineChart data={newData}>
               <ChartTooltip content={<ChartTooltipContent />} />
-              <ChartLegend content={<ChartLegendContent nameKey='' payload='' />} />
+              <ChartLegend content={<ChartLegendContent nameKey='' payload={[]} />} />
               <XAxis
                 dataKey='month'
                 stroke='#888888'

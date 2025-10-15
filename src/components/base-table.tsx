@@ -26,7 +26,7 @@ interface ExtractColumn<T> {
   accessorKey: keyof T
   calcTotal: boolean
 }
-export type TColumns<T> = Array<ColumnDef<T> & ExtractColumn<T>>
+export type TColumns<T> = Array<Partial<ColumnDef<T>> & ExtractColumn<T>>
 
 export default function BaseTable<T>({ data, columns, }: { data: T[], columns: TColumns<T> }) {
   const [sorting, setSorting] = React.useState<SortingState>([])
