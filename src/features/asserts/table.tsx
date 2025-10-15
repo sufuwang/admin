@@ -1,4 +1,3 @@
-import { type ColumnDef } from '@tanstack/react-table'
 import {
   type TBalanceTableRow,
   type TIncomeTableRow,
@@ -6,7 +5,7 @@ import {
 } from '@/data/asserts'
 import { ColumnKeys, getColumnAlias, type TCurrency } from '@/lib/const'
 import { formatNumber } from '@/lib/utils'
-import Table from '@/components/base-table'
+import Table, { type TColumns } from '@/components/base-table'
 
 function renderTable<
   T extends TBalanceTableRow | TIncomeTableRow | TOutcomeTableRow,
@@ -52,7 +51,7 @@ function renderTable<
     },
     data[0] as TBalanceTableRow
   )
-  const columns: ColumnDef<(typeof data)[number]>[] = Object.keys(_d)
+  const columns: TColumns<(typeof data)[number]> = Object.keys(_d)
     .reduce((arr, cur) => {
       if (arr.at(-1) === 'comment') {
         return [...arr.slice(0, -1), cur, 'comment']
@@ -78,6 +77,7 @@ function renderTable<
           }
           return row.getValue(accessorKey) ?? '-'
         },
+        calcTotal: !['year', 'month', 'comment'].includes(accessorKey) && !accessorKey.startsWith('balance_'),
       })
     )
   return <Table data={data} columns={columns} />

@@ -19,8 +19,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { formatNumber } from "@/lib/utils"
+import { type TCurrency } from "@/lib/const"
 
-export default function BaseTable<T>({ data, columns, }: { data: T[], columns: ColumnDef<T>[] }) {
+interface ExtractColumn<T> {
+  accessorKey: keyof T
+  calcTotal: boolean
+}
+export type TColumns<T> = Array<ColumnDef<T> & ExtractColumn<T>>
+
+export default function BaseTable<T>({ data, columns, }: { data: T[], columns: TColumns<T> }) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
@@ -44,6 +52,15 @@ export default function BaseTable<T>({ data, columns, }: { data: T[], columns: C
       rowSelection,
     },
   })
+
+  const calcTotal = (column: (TColumns<T>)[number]) => {
+    const { accessorKey, calcTotal } = column
+    if (!calcTotal) {
+      return '-'
+    }
+    const res = data.map(r => r[accessorKey] as number).reduce((a, b) => a + (b ?? 0), 0)
+    return formatNumber(res, (accessorKey as string).split('_')[1] as TCurrency['abbr'])
+  }
 
   return (
     <div className="w-full rounded-md border">
@@ -93,6 +110,13 @@ export default function BaseTable<T>({ data, columns, }: { data: T[], columns: C
               </TableCell>
             </TableRow>
           )}
+          <TableRow className="font-semibold bg-muted">
+            <TableCell>合计</TableCell>
+            <TableCell>共{data.length}行</TableCell>
+            {
+              columns.slice(2).map((column) => <TableCell key={column.accessorKey as string}>{calcTotal(column)}</TableCell>)
+            }
+          </TableRow>
         </TableBody>
       </Table>
     </div>
