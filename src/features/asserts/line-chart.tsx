@@ -52,8 +52,11 @@ export default function LineChart({
 
   const cacheName = `${id}_line_chart_legend`
   const cache = JSON.parse(localStorage.getItem(cacheName) ?? '[]')
-  const defaultLegendsValue = cache.length ? cache : newDataKeys.map((key) => ({ key, visible: true }))
-  const [legends, setLegends] = useState<{key: string, visible: boolean}[]>(defaultLegendsValue)
+  const defaultLegendsValue = cache.length
+    ? cache
+    : newDataKeys.map((key) => ({ key, visible: true }))
+  const [legends, setLegends] =
+    useState<{ key: string; visible: boolean }[]>(defaultLegendsValue)
   useEffect(() => {
     localStorage.setItem(cacheName, JSON.stringify(legends))
   }, [legends])
@@ -69,7 +72,7 @@ export default function LineChart({
 
   return (
     <Card className={`py-4 ${isMobile() && 'gap-0 pt-2 pb-0'} justify-center`}>
-      <CardContent className={`px-4 ${isMobile() && 'pl-2 pr-4 py-4'}`}>
+      <CardContent className={`px-4 ${isMobile() && 'py-4 pr-4 pl-2'}`}>
         <ChartContainer config={chartConfig}>
           <RLineChart data={newData}>
             <ChartTooltip content={<ChartTooltipContent />} />
@@ -93,17 +96,17 @@ export default function LineChart({
               tickFormatter={tickFormatterY}
             />
             {legends.map((row, index) => (
-                <Line
-                  dataKey={row.key}
-                  hide={!row.visible}
-                  className='fill-primary'
-                  type='monotone'
-                  strokeWidth={2}
-                  stroke={getColor(index)}
-                  dot={{ r: 4 }}
-                  activeDot={{ r: 6 }}
-                />
-              ))}
+              <Line
+                dataKey={row.key}
+                hide={!row.visible}
+                className='fill-primary'
+                type='monotone'
+                strokeWidth={2}
+                stroke={getColor(index)}
+                dot={{ r: 4 }}
+                activeDot={{ r: 6 }}
+              />
+            ))}
           </RLineChart>
         </ChartContainer>
       </CardContent>

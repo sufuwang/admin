@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import { type TCurrency } from './const'
+import { Currencies, type TCurrency } from './const'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -71,7 +71,7 @@ export function formatNumber(value: number = 0, currency: TCurrency['abbr'] | '%
   }
   return new Intl.NumberFormat('zh-CN', {
     style: 'currency',
-    currency,
+    currency: [...Currencies.map(row => row.abbr), '%'].includes(currency) ? currency : 'CNY',
   }).format(value)
 }
 
