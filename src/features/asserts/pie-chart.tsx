@@ -39,8 +39,8 @@ export default function PieChart(props: Props) {
   )
 
   return (
-    <Card className={`${isMobile() && 'gap-0 pt-2 pb-0'} justify-center`}>
-      <CardContent className={`${isMobile() && 'pr-4 pl-0 pt-0 pb-2'}`}>
+    <Card className={`py-4 ${isMobile() && 'gap-0 pt-2 pb-0'} justify-center`}>
+      <CardContent className={`px-4 ${isMobile() && 'px-2 pt-0 pb-2'}`}>
         <ChartContainer config={chartConfig}>
           <RPieChart margin={{ top: isMobile() ? 28 : 10, bottom: 10 }}>
             <ChartTooltip content={<ChartTooltipContent />} />

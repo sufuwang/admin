@@ -68,8 +68,8 @@ export default function LineChart({
   }
 
   return (
-    <Card className={`${isMobile() && 'gap-0 pt-2 pb-0'} justify-center`}>
-      <CardContent className={`${isMobile() && 'pl-2 pr-4 py-4'}`}>
+    <Card className={`py-4 ${isMobile() && 'gap-0 pt-2 pb-0'} justify-center`}>
+      <CardContent className={`px-4 ${isMobile() && 'pl-2 pr-4 py-4'}`}>
         <ChartContainer config={chartConfig}>
           <RLineChart data={newData}>
             <ChartTooltip content={<ChartTooltipContent />} />
