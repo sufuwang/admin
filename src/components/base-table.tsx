@@ -36,6 +36,7 @@ interface Props<T> {
 
 export default function BaseTable<T>({ fixedColumnCount = -1, data, columns, }: Props<T>) {
   const divRef = React.useRef<HTMLDivElement>(null)
+  const tableRowRef = React.useRef<HTMLTableRowElement>(null)
   const [isScroll, setIsScroll] = React.useState(false)
   const [scrollLeft, setScrollLeft] = React.useState(0)
 
@@ -75,15 +76,21 @@ export default function BaseTable<T>({ fixedColumnCount = -1, data, columns, }: 
     },
   })
 
-  const getFixedColumnClassname = (index: number) => {
+  const getFixedColumnClassname = (index: number, defaultClassName = '') => {
     if (isScroll && fixedColumnCount > 0 && scrollLeft > 0 && fixedColumnCount -1 >= index) {
-      const cls = new Array(fixedColumnCount).fill('').map((_, i) => `
-        sticky ${i === 0 ? 'left-0' : `left-[${51 * i}px]`} bg-background z-10
-      `)
+      const tableRowChildNodes = tableRowRef.current!.children
+      const cls = new Array(fixedColumnCount).fill(`sticky bg-background z-10 ${defaultClassName}`)
       cls[fixedColumnCount - 1] = `${cls.at(-1)} after:w-[30px] after:h-full after:absolute after:top-0 after:right-[-30px] after:shadow-[inset_8px_0_6px_-6px_rgba(0,0,0,0.15)]`
-      return cls[index]
+      return {
+        className: cls[index],
+        style: {
+          left: index === 0 ? 0 : tableRowChildNodes[index - 1].clientWidth
+        }
+      }
     }
-    return ''
+    return {
+      className: defaultClassName
+    }
   }
 
   const calcTotal = (column: (TColumns<T>)[number]) => {
@@ -100,12 +107,12 @@ export default function BaseTable<T>({ fixedColumnCount = -1, data, columns, }: 
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
+            <TableRow key={headerGroup.id} ref={tableRowRef}>
               {headerGroup.headers.map((header, index) => {
                 return (
                   <TableHead
                     key={header.id}
-                    className={getFixedColumnClassname(index)}
+                    {...getFixedColumnClassname(index)}
                   >
                     {header.isPlaceholder
                       ? null
@@ -127,7 +134,7 @@ export default function BaseTable<T>({ fixedColumnCount = -1, data, columns, }: 
                 data-state={row.getIsSelected() && "selected"}
               >
                 {row.getVisibleCells().map((cell, index) => (
-                  <TableCell key={cell.id} className={getFixedColumnClassname(index)}>
+                  <TableCell key={cell.id} {...getFixedColumnClassname(index)}>
                     {flexRender(
                       cell.column.columnDef.cell,
                       cell.getContext()
@@ -147,8 +154,8 @@ export default function BaseTable<T>({ fixedColumnCount = -1, data, columns, }: 
             </TableRow>
           )}
           <TableRow className="font-semibold">
-            <TableCell className={`${getFixedColumnClassname(0)} bg-muted`}>合计</TableCell>
-            <TableCell className={`${getFixedColumnClassname(1)} bg-muted`}>共{data.length}行</TableCell>
+            <TableCell { ...getFixedColumnClassname(0, 'bg-muted') }>合计</TableCell>
+            <TableCell { ...getFixedColumnClassname(1, 'bg-muted') }>共{data.length}行</TableCell>
             {
               columns.slice(2).map((column) => <TableCell key={column.accessorKey as string} className="bg-muted">{calcTotal(column)}</TableCell>)
             }
