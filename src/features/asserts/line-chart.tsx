@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Line, LineChart as RLineChart, XAxis, YAxis } from 'recharts'
 import { ColumnKeys, getColumnAlias, type TColumnKeys } from '@/lib/const'
-import { formatNumber, isMobile } from '@/lib/utils'
+import { formatNumber, isMobile, getColor } from '@/lib/utils'
 import { Card, CardContent } from '@/components/ui/card'
 import {
   ChartContainer,
@@ -39,12 +39,12 @@ export default function LineChart({
     })
   })
   const chartConfig = Object.fromEntries(
-    newDataKeys.map((key) => {
+    newDataKeys.map((key, index) => {
       return [
         key,
         {
           label: ColumnKeys[key as TColumnKeys] || getColumnAlias(key) || 'x',
-          color: 'var(--foreground)',
+          color: getColor(index),
         },
       ]
     })
@@ -68,8 +68,8 @@ export default function LineChart({
   }
 
   return (
-    <Card className={`${isMobile() && 'gap-2 pt-4 pb-0'}`}>
-      <CardContent className={`${isMobile() && 'pr-4 pl-0'}`}>
+    <Card className={`${isMobile() && 'gap-0 pt-2 pb-0'} justify-center`}>
+      <CardContent className={`${isMobile() && 'pl-2 pr-4 py-4'}`}>
         <ChartContainer config={chartConfig}>
           <RLineChart data={newData}>
             <ChartTooltip content={<ChartTooltipContent />} />
@@ -77,8 +77,6 @@ export default function LineChart({
               content={
                 <ChartLegendContent
                   defaultValue={defaultLegendsValue}
-                  nameKey=''
-                  payload={[]}
                   onClickLegend={onClickLegend}
                 />
               }
@@ -94,14 +92,14 @@ export default function LineChart({
               fontSize={12}
               tickFormatter={tickFormatterY}
             />
-            {legends.map((row) => (
+            {legends.map((row, index) => (
                 <Line
                   dataKey={row.key}
                   hide={!row.visible}
                   className='fill-primary'
                   type='monotone'
                   strokeWidth={2}
-                  stroke='var(--foreground)'
+                  stroke={getColor(index)}
                   dot={{ r: 4 }}
                   activeDot={{ r: 6 }}
                 />

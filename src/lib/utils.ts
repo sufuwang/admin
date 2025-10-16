@@ -74,3 +74,8 @@ export function formatNumber(value: number = 0, currency: TCurrency['abbr'] | '%
     currency,
   }).format(value)
 }
+
+const Colors = ['--color-chart-1', '--color-chart-2', '--color-chart-3', '--color-chart-4', '--color-chart-5'].map(row => `var(${row})`)
+export function getColor(index = 0, defaultColor = 'var(--foreground)') {
+  return Colors[index] ?? defaultColor
+}

@@ -69,3 +69,9 @@ export const getColumnAlias = (name: string) => {
   }
   return name
 }
+
+export const i18n = {
+  loans: '贷款',
+  restCategories: '剩余类别',
+} as const
+export type Ti18n = typeof i18n

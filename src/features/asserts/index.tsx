@@ -4,6 +4,9 @@ import {
   IncomeTable as IncomeTableData,
   OutcomeTable as OutcomeTableData,
   NumberCardListData,
+  BalanceTableSum,
+  IncomeTableSum,
+  OutcomeTableSum,
 } from '@/data/asserts'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import DashboardHeader from '@/components/dashboard-header'
@@ -11,47 +14,69 @@ import { Main } from '@/components/layout/main'
 import NumberCardList from '@/components/number-card-list'
 import YearPicker, { defaultYear } from '@/components/year-picker'
 import LineChart from './line-chart'
+import PieChart from './pie-chart'
 import { BalanceTable, IncomeTable, OutcomeTable } from './table'
 
 const Comps = [
   {
     key: 'Balance',
     label: '资产负债表',
-    comp: BalanceTable,
-    data: BalanceTableData,
-    dataKeys: ['totalIncome', 'totalOutcome'],
-    complexDataKeys: ['balances_CNY', 'balances_HKD']
+    table: {
+      comp: BalanceTable,
+      data: BalanceTableData,
+    },
+    lineChart: {
+      dataKeys: ['totalIncome', 'totalOutcome'],
+      complexDataKeys: ['balances_CNY', 'balances_HKD']
+    },
+    pieChart: {
+      data: BalanceTableSum
+    }
   },
   {
     key: 'Income',
     label: '收入表',
-    comp: IncomeTable,
-    data: IncomeTableData,
-    dataKeys: [
-      'wageIncome',
-      'fundIncome',
-      'partTimeIncome',
-      'investmentIncome',
-      'otherIncome',
-      'totalPureIncome',
-      'transferIncome',
-    ],
+    table: {
+      comp: IncomeTable,
+      data: IncomeTableData,
+    },
+    lineChart: {
+      dataKeys: [
+        'wageIncome',
+        'fundIncome',
+        'partTimeIncome',
+        'investmentIncome',
+        'otherIncome',
+        'totalPureIncome',
+        'transferIncome',
+      ],
+    },
+    pieChart: {
+      data: IncomeTableSum
+    }
   },
   {
     key: 'Outcome',
     label: '支出表',
-    comp: OutcomeTable,
-    data: OutcomeTableData,
-    dataKeys: [
-      'houseOutcome',
-      'foodOutcome',
-      'transportOutcome',
-      'relativeOutcome',
-      'specialOutcome',
-      'bulkOutcome',
-      // 'otherOutcome',
-    ],
-    complexDataKeys: ['loans_房贷还款']
+    table: {
+      comp: OutcomeTable,
+      data: OutcomeTableData,
+    },
+    lineChart: {
+      dataKeys: [
+        'houseOutcome',
+        'foodOutcome',
+        'transportOutcome',
+        'relativeOutcome',
+        'specialOutcome',
+        'bulkOutcome',
+        // 'otherOutcome',
+      ],
+      complexDataKeys: ['loans_房贷还款']
+    },
+    pieChart: {
+      data: OutcomeTableSum
+    }
   },
 ]
 
@@ -80,7 +105,7 @@ export default function Asserts() {
               <YearPicker onChange={(d) => setYear(d)} />
             </div>
             {Comps.map((row) => {
-              const data = row.data.filter((d) =>
+              const data = row.table.data.filter((d) =>
                 curYear === 0 ? true : d.year === curYear
               )
               return (
@@ -89,8 +114,11 @@ export default function Asserts() {
                   key={row.key}
                   value={row.key}
                 >
-                  {row.comp({ data })}
-                  <LineChart id={row.key} dataKeys={row.dataKeys} complexDataKeys={row.complexDataKeys} data={data} />
+                  {row.table.comp({ data })}
+                  <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
+                    <LineChart id={row.key} dataKeys={row.lineChart.dataKeys} complexDataKeys={row.lineChart.complexDataKeys} data={data} />
+                    <PieChart data={row.pieChart.data} />
+                  </div>
                 </TabsContent>
               )
             })}

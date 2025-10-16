@@ -364,6 +364,11 @@ export const BalanceTable: TBalanceTableRow[] = [
   row.totalOutcome = OutcomeTable.find(r => r.year === row.year && r.month === row.month)?.totalOutcome
   return row as TBalanceTableRow
 })
+export type TBalanceTableSum = Record<'totalIncome' | 'totalOutcome', number>
+export const BalanceTableSum: TBalanceTableSum = {
+  totalIncome: BalanceTable.reduce((a, b) => a + (b.totalIncome ?? 0), 0),
+  totalOutcome: BalanceTable.reduce((a, b) => a + (b.totalOutcome ?? 0), 0),
+}
 
 // 卡片列表
 export const NumberCardListData = (() => {

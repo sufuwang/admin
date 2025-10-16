@@ -258,13 +258,13 @@ function ChartLegendContent({
   payload,
   verticalAlign = "bottom",
   nameKey,
-  defaultValue = {},
+  defaultValue = [],
   onClickLegend
 }: React.ComponentProps<"div"> &
   Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> & {
     hideIcon?: boolean
     nameKey?: string
-  } & { defaultValue: Array<{ key: string, visible: boolean }>, onClickLegend: (k: string, v: boolean) => void }) {
+  } & { defaultValue?: Array<{ key: string, visible: boolean }>, onClickLegend?: (k: string, v: boolean) => void }) {
   const { config } = useChart()
 
   if (!payload?.length) {
@@ -275,13 +275,13 @@ function ChartLegendContent({
   const onClick = (key: string) => {
     const v = isVisible[key]
     setVisible({ ...isVisible, [key]: !v })
-    onClickLegend(key, !v)
+    onClickLegend?.(key, !v)
   }
 
   return (
     <div
       className={cn(
-        "flex items-center justify-center gap-4 flex-wrap",
+        "flex items-center justify-center gap-2 flex-wrap",
         verticalAlign === "top" ? "pb-3" : "pt-3",
         className
       )}
@@ -289,7 +289,7 @@ function ChartLegendContent({
       {payload
         .filter((item) => item.type !== "none")
         .map((item) => {
-          const key = `${nameKey || item.dataKey || "value"}`
+          const key = `${nameKey || item.dataKey || item.value || "value"}`
           const itemConfig = getPayloadConfigFromPayload(config, item, key)
 
           return (
@@ -297,7 +297,7 @@ function ChartLegendContent({
               key={item.value}
               className={cn(
                 "[&>svg]:text-muted-foreground flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 whitespace-nowrap",
-                !isVisible[key] && 'line-through'
+                defaultValue.length && !isVisible[key] && 'line-through'
               )}
               onClick={() => onClick(key)}
             >
