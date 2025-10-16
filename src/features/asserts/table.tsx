@@ -79,7 +79,7 @@ function renderTable<
         calcTotal: !['year', 'month', 'comment', '剩余房贷'].includes(accessorKey) && !accessorKey.startsWith('balances_'),
       })
     )
-  return <Table data={data} columns={columns} />
+  return <Table fixedColumnCount={2} data={data} columns={columns} />
 }
 
 interface Props {

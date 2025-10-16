@@ -28,11 +28,33 @@ interface ExtractColumn<T> {
 }
 export type TColumns<T> = Array<Partial<ColumnDef<T>> & ExtractColumn<T>>
 
-export default function BaseTable<T>({ data, columns, }: { data: T[], columns: TColumns<T> }) {
+interface Props<T> {
+  fixedColumnCount?: number
+  data: T[]
+  columns: TColumns<T>
+}
+
+export default function BaseTable<T>({ fixedColumnCount = -1, data, columns, }: Props<T>) {
+  const divRef = React.useRef<HTMLDivElement>(null)
+  const [isScroll, setIsScroll] = React.useState(false)
+  const [scrollLeft, setScrollLeft] = React.useState(0)
+
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
+
+  React.useEffect(() => {
+    const [tableContainer] = divRef.current!.children
+
+    tableContainer.addEventListener('scroll', ({ target }) => {
+      if (target instanceof HTMLDivElement) {
+        setScrollLeft(target.scrollLeft)
+      }
+    })
+
+    setIsScroll(tableContainer.scrollWidth > tableContainer.clientWidth)
+  }, [])
 
   const table = useReactTable({
     data,
@@ -53,6 +75,17 @@ export default function BaseTable<T>({ data, columns, }: { data: T[], columns: T
     },
   })
 
+  const getFixedColumnClassname = (index: number) => {
+    if (isScroll && fixedColumnCount > 0 && scrollLeft > 0 && fixedColumnCount -1 >= index) {
+      const cls = new Array(fixedColumnCount).fill('').map((_, i) => `
+        sticky ${i === 0 ? 'left-0' : `left-[${51 * i}px]`} bg-background z-10
+      `)
+      cls[fixedColumnCount - 1] = `${cls.at(-1)} after:w-[30px] after:h-full after:absolute after:top-0 after:right-[-30px] after:shadow-[inset_8px_0_6px_-6px_rgba(0,0,0,0.15)]`
+      return cls[index]
+    }
+    return ''
+  }
+
   const calcTotal = (column: (TColumns<T>)[number]) => {
     const { accessorKey, calcTotal } = column
     if (!calcTotal) {
@@ -63,14 +96,17 @@ export default function BaseTable<T>({ data, columns, }: { data: T[], columns: T
   }
 
   return (
-    <div className="w-full rounded-md border">
+    <div className="w-full rounded-md border" ref={divRef}>
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
+              {headerGroup.headers.map((header, index) => {
                 return (
-                  <TableHead key={header.id}>
+                  <TableHead
+                    key={header.id}
+                    className={getFixedColumnClassname(index)}
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -90,8 +126,8 @@ export default function BaseTable<T>({ data, columns, }: { data: T[], columns: T
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
               >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                {row.getVisibleCells().map((cell, index) => (
+                  <TableCell key={cell.id} className={getFixedColumnClassname(index)}>
                     {flexRender(
                       cell.column.columnDef.cell,
                       cell.getContext()
@@ -110,11 +146,11 @@ export default function BaseTable<T>({ data, columns, }: { data: T[], columns: T
               </TableCell>
             </TableRow>
           )}
-          <TableRow className="font-semibold bg-muted">
-            <TableCell>合计</TableCell>
-            <TableCell>共{data.length}行</TableCell>
+          <TableRow className="font-semibold">
+            <TableCell className={`${getFixedColumnClassname(0)} bg-muted`}>合计</TableCell>
+            <TableCell className={`${getFixedColumnClassname(1)} bg-muted`}>共{data.length}行</TableCell>
             {
-              columns.slice(2).map((column) => <TableCell key={column.accessorKey as string}>{calcTotal(column)}</TableCell>)
+              columns.slice(2).map((column) => <TableCell key={column.accessorKey as string} className="bg-muted">{calcTotal(column)}</TableCell>)
             }
           </TableRow>
         </TableBody>
