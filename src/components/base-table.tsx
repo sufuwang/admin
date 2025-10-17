@@ -93,13 +93,13 @@ export default function BaseTable<T>({ fixedColumnCount = -1, data, columns, }: 
     }
   }
 
-  const calcTotal = (column: (TColumns<T>)[number]) => {
+  const calcTotal = (column: (TColumns<T>)[number], handleRes = (r: number) => r) => {
     const { accessorKey, calcTotal } = column
     if (!calcTotal) {
       return '-'
     }
     const res = data.map(r => r[accessorKey] as number).reduce((a, b) => a + (b ?? 0), 0)
-    return formatNumber(res, (accessorKey as string).split('_')[1] as TCurrency['abbr'])
+    return formatNumber(handleRes(res), (accessorKey as string).split('_')[1] as TCurrency['abbr'])
   }
 
   return (
@@ -158,6 +158,13 @@ export default function BaseTable<T>({ fixedColumnCount = -1, data, columns, }: 
             <TableCell { ...getFixedColumnClassname(1, 'bg-muted') }>共{data.length}行</TableCell>
             {
               columns.slice(2).map((column) => <TableCell key={column.accessorKey as string} className="bg-muted">{calcTotal(column)}</TableCell>)
+            }
+          </TableRow>
+          <TableRow className="font-semibold">
+            <TableCell { ...getFixedColumnClassname(0, 'bg-muted') }>平均</TableCell>
+            <TableCell { ...getFixedColumnClassname(1, 'bg-muted') }>%</TableCell>
+            {
+              columns.slice(2).map((column) => <TableCell key={column.accessorKey as string} className="bg-muted">{calcTotal(column, r => r / data.length)}</TableCell>)
             }
           </TableRow>
         </TableBody>
