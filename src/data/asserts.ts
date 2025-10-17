@@ -402,6 +402,26 @@ export const NumberCardListData = (() => {
       title: '总支出',
       value: formatNumber(totalOutcome),
       description: '年初至今累计支出',
+    },
+    {
+      title: '月均收入',
+      value: formatNumber(totalIncome / BalanceTable.length),
+      description: '年初至今的月均收入',
+    },
+    {
+      title: '月均工资',
+      value: formatNumber(IncomeTableSum.wageIncome / IncomeTable.length),
+      description: '年初至今的月均工资收入',
+    },
+    {
+      title: '月均支出',
+      value: formatNumber(totalOutcome / BalanceTable.length),
+      description: '年初至今的月均支出',
+    },
+    {
+      title: '月均餐饮支出',
+      value: formatNumber(OutcomeTableSum.foodOutcome / OutcomeTable.length),
+      description: '年初至今的月均餐饮支出',
     }
   ])
   const _IncomeTableSum = Object.entries(IncomeTableSum)
