@@ -79,7 +79,7 @@ export default function BaseTable<T>({ fixedColumnCount = -1, data, columns, }: 
   const getFixedColumnClassname = (index: number, defaultClassName = '') => {
     if (isScroll && fixedColumnCount > 0 && scrollLeft > 0 && fixedColumnCount -1 >= index) {
       const tableRowChildNodes = tableRowRef.current!.children
-      const cls = new Array(fixedColumnCount).fill(`sticky bg-background z-10 ${defaultClassName}`)
+      const cls = new Array(fixedColumnCount).fill(`sticky bg-background ${defaultClassName}`)
       cls[fixedColumnCount - 1] = `${cls.at(-1)} after:w-[30px] after:h-full after:absolute after:top-0 after:right-[-30px] after:shadow-[inset_8px_0_6px_-6px_rgba(var(--shadow))]`
       return {
         className: cls[index],
