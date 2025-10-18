@@ -436,16 +436,10 @@ export const ResumeTable: TResumeTableRow[] = [
     singleAccumulationFund: 0,
   },
 ].map(row => {
-  const month = differenceInMonths(row.date[1], row.date[0])
+  const month = differenceInMonths(row.date[1].replace('.', '-'), row.date[0].replace('.', '-'))
   return {
     ...row,
     month,
-    // pretaxIncome: formatNumber(row.pretaxIncome),
-    // oldAgeInsurance: formatNumber(row.oldAgeInsurance),
-    // medicalInsurance: formatNumber(row.medicalInsurance),
-    // unemploymentInsurance: formatNumber(row.unemploymentInsurance),
-    // singleAccumulationFund: formatNumber(row.singleAccumulationFund),
-    // averageMonthlyIncome: formatNumber((row.pretaxIncome + row.oldAgeInsurance + row.medicalInsurance + row.unemploymentInsurance + row.singleAccumulationFund) / month)
     averageMonthlyIncome: month === 0 ? 0 : (row.pretaxIncome + row.oldAgeInsurance + row.medicalInsurance + row.unemploymentInsurance + row.singleAccumulationFund) / month
   }
 })
