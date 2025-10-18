@@ -11,7 +11,8 @@ import {
   ChartLegendContent,
 } from '@/components/ui/chart'
 
-interface Props<T = Record<string, number | string | Array<unknown>>> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+interface Props<T = Record<string, any>> {
   id: string
   dataKeys: (keyof T)[]
   complexDataKeys?: (keyof T)[]
@@ -88,7 +89,10 @@ export default function LineChart({
               dataKey='month'
               stroke='#888888'
               fontSize={12}
-              tickFormatter={(label) => label.slice(0, 3)}
+              tickFormatter={(label) => {
+                const txt = label.toString()
+                return txt.length > 3 ? txt.slice(0, 3) : txt
+              }}
             />
             <YAxis
               stroke='#888888'

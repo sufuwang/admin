@@ -9,10 +9,10 @@ import {
   ChartLegend,
   ChartLegendContent,
 } from '@/components/ui/chart'
-import type { TBalanceTableSum, TIncomeTableSum, TOutcomeTableSum } from '@/data/asserts'
+import type { TBalanceTableSum, TIncomeTableSum, TOutcomeTableSum, TResumeTableRowSum } from '@/data/asserts'
 
 interface Props {
-  data: TBalanceTableSum | TIncomeTableSum | TOutcomeTableSum
+  data: TBalanceTableSum | TIncomeTableSum | TOutcomeTableSum | TResumeTableRowSum
 }
 
 const getLabel = (key: string) => {

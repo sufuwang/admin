@@ -3,6 +3,7 @@ import {
   BalanceTable as BalanceTableData,
   IncomeTable as IncomeTableData,
   OutcomeTable as OutcomeTableData,
+  ResumeTable as ResumeTableData,
   NumberCardListData,
   BalanceTableSum,
   IncomeTableSum,
@@ -15,7 +16,7 @@ import NumberCardList from '@/components/number-card-list'
 import YearPicker, { defaultYear } from '@/components/year-picker'
 import LineChart from './line-chart'
 import PieChart from './pie-chart'
-import { BalanceTable, IncomeTable, OutcomeTable } from './table'
+import { BalanceTable, IncomeTable, OutcomeTable, ResumeTable } from './table'
 
 const Comps = [
   {
@@ -78,6 +79,14 @@ const Comps = [
       data: OutcomeTableSum
     }
   },
+  {
+    key: 'Resume',
+    label: '履历表',
+    table: {
+      comp: ResumeTable,
+      data: ResumeTableData,
+    },
+  },
 ]
 
 export default function Asserts() {
@@ -105,9 +114,12 @@ export default function Asserts() {
               <YearPicker onChange={(d) => setYear(d)} />
             </div>
             {Comps.map((row) => {
-              const data = row.table.data.filter((d) =>
-                curYear === 0 ? true : d.year === curYear
-              )
+              const data = row.table.data.filter((d) => {
+                if ((d as { year?: number }).year === undefined) {
+                  return true
+                }
+                return curYear === 0 ? true : (d as { year?: number }).year === curYear
+              })
               return (
                 <TabsContent
                   className='space-y-4'
@@ -116,8 +128,8 @@ export default function Asserts() {
                 >
                   {row.table.comp({ data })}
                   <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
-                    <LineChart id={row.key} dataKeys={row.lineChart.dataKeys} complexDataKeys={row.lineChart.complexDataKeys} data={data} />
-                    <PieChart data={row.pieChart.data} />
+                    {row.lineChart && <LineChart id={row.key} dataKeys={row.lineChart.dataKeys} complexDataKeys={row.lineChart.complexDataKeys} data={data} />}
+                    {row.pieChart && <PieChart data={row.pieChart.data} />}
                   </div>
                 </TabsContent>
               )

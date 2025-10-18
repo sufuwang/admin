@@ -1,6 +1,6 @@
 import { type TCurrency, type TColumnKeys, ColumnKeys } from '@/lib/const'
 import { formatNumber } from '@/lib/utils'
-import { getYear } from 'date-fns'
+import { differenceInMonths, getYear } from 'date-fns'
 
 const curYear = getYear(new Date())
 
@@ -370,7 +370,100 @@ export const BalanceTableSum: TBalanceTableSum = {
   totalOutcome: BalanceTable.reduce((a, b) => a + (b.totalOutcome ?? 0), 0),
 }
 
-// 卡片列表
+
+/**
+ * 履历表
+ */
+export interface TResumeTableRow {
+  company: string
+  date: string[]
+  month: number
+  pretaxIncome: number
+  oldAgeInsurance: number
+  medicalInsurance: number
+  unemploymentInsurance: number
+  singleAccumulationFund: number
+  averageMonthlyIncome: number // 忽略个税
+}
+export const ResumeTable: TResumeTableRow[] = [
+  {
+    company: '腾讯',
+    date: ['2021.7', '2022.10'],
+    month: 0,
+    pretaxIncome: 465588.1,
+    oldAgeInsurance: 21889.44,
+    medicalInsurance: 5472.36,
+    unemploymentInsurance: 103.32,
+    singleAccumulationFund: 32834.16,
+    averageMonthlyIncome: 0
+  },
+  {
+    company: 'ZOOM',
+    date: ['2022.11', '2023.3'],
+    pretaxIncome: 201399.1,
+    oldAgeInsurance: 6196.64,
+    medicalInsurance: 1380,
+    unemploymentInsurance: 387.29,
+    singleAccumulationFund: 8160,
+  },
+  {
+    company: '中科曙光',
+    date: ['2023.4', '2024.1'],
+    pretaxIncome: 180566.6,
+    oldAgeInsurance: 13918.16,
+    medicalInsurance: 3434.4,
+    unemploymentInsurance: 513,
+    singleAccumulationFund: 17100,
+  },
+  {
+    company: '四川数字',
+    date: ['2024.3', '2024.3'],
+    // date: ['2024.3', '2025.8'],
+    pretaxIncome: 0,
+    oldAgeInsurance: 0,
+    medicalInsurance: 0,
+    unemploymentInsurance: 0,
+    singleAccumulationFund: 0,
+  },
+  {
+    company: '亿达通',
+    date: ['2025.9', '2025.9'],
+    // date: ['2025.9', '2026.12'],
+    pretaxIncome: 0,
+    oldAgeInsurance: 0,
+    medicalInsurance: 0,
+    unemploymentInsurance: 0,
+    singleAccumulationFund: 0,
+  },
+].map(row => {
+  const month = differenceInMonths(row.date[1], row.date[0])
+  return {
+    ...row,
+    month,
+    // pretaxIncome: formatNumber(row.pretaxIncome),
+    // oldAgeInsurance: formatNumber(row.oldAgeInsurance),
+    // medicalInsurance: formatNumber(row.medicalInsurance),
+    // unemploymentInsurance: formatNumber(row.unemploymentInsurance),
+    // singleAccumulationFund: formatNumber(row.singleAccumulationFund),
+    // averageMonthlyIncome: formatNumber((row.pretaxIncome + row.oldAgeInsurance + row.medicalInsurance + row.unemploymentInsurance + row.singleAccumulationFund) / month)
+    averageMonthlyIncome: month === 0 ? 0 : (row.pretaxIncome + row.oldAgeInsurance + row.medicalInsurance + row.unemploymentInsurance + row.singleAccumulationFund) / month
+  }
+})
+export type TResumeTableRowSum = Pick<TResumeTableRow, Exclude<keyof TResumeTableRow, 'company' | 'date'>>
+export const ResumeTableSum: TResumeTableRowSum = {
+  month: ResumeTable.reduce((a, b) => a + b.month, 0),
+  pretaxIncome: ResumeTable.reduce((a, b) => a + b.pretaxIncome, 0),
+  oldAgeInsurance: ResumeTable.reduce((a, b) => a + b.oldAgeInsurance, 0),
+  medicalInsurance: ResumeTable.reduce((a, b) => a + b.medicalInsurance, 0),
+  unemploymentInsurance: ResumeTable.reduce((a, b) => a + b.unemploymentInsurance, 0),
+  singleAccumulationFund: ResumeTable.reduce((a, b) => a + b.singleAccumulationFund, 0),
+  averageMonthlyIncome: 0
+}
+ResumeTableSum.averageMonthlyIncome = Object.entries(ResumeTableSum).filter(row => row[0] !== 'month').reduce((a, b) => a + b[1], 0) / ResumeTableSum.month
+
+/**
+ * 卡片列表
+ */
 export const NumberCardListData = (() => {
   const rows = []
   const lastCNYRow = BalanceTable.findLast((row) => row.balances?.length)!.balances?.find((b) => b.abbr === 'CNY')

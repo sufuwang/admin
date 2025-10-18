@@ -30,6 +30,7 @@ export type TCurrency = (typeof Currencies)[number]
 export const ColumnKeys = {
   year: '年份',
   month: '月份',
+  date: '日期',
   totalIncome: '总收入',
   totalOutcome: '总支出',
   totalPureIncome: '净收入',
@@ -46,7 +47,14 @@ export const ColumnKeys = {
   relativeOutcome: '亲属支出',
   specialOutcome: '特殊支出',
   bulkOutcome: '大宗支出',
-  otherOutcome: '其他支出'
+  company: '公司',
+  otherOutcome: '其他支出',
+  pretaxIncome: '税前收入',
+  oldAgeInsurance: '养老保险',
+  medicalInsurance: '医疗保险',
+  unemploymentInsurance: '失业保险',
+  singleAccumulationFund: '单边公积金',
+  averageMonthlyIncome: '月均收入'
 } as const
 export type TColumnKeys = keyof typeof ColumnKeys
 export const getColumnAlias = (name: string) => {
