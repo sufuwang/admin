@@ -116,7 +116,7 @@ export default function ResumeTable() {
         </TableBody>
         <TableFooter>
           <TableRow>
-            <TableCell {...getFixedColumnClassname(0, 'bg-[#F8FAFB]')}>
+            <TableCell {...getFixedColumnClassname(0, 'bg-muted')}>
               总和
             </TableCell>
             <TableCell>共{ResumeTableData.length}家公司</TableCell>
@@ -130,7 +130,7 @@ export default function ResumeTable() {
             ))}
           </TableRow>
           <TableRow>
-            <TableCell {...getFixedColumnClassname(0, 'bg-[#F8FAFB]')}>
+            <TableCell {...getFixedColumnClassname(0, 'bg-muted')}>
               平均
             </TableCell>
             <TableCell>-</TableCell>
