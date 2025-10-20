@@ -20,7 +20,7 @@ export type TIncomeTableRow = {
   totalIncome: number
   comment?: string
 }
-export const IncomeTable: TIncomeTableRow[] = [
+export const IncomeTableData: TIncomeTableRow[] = [
   {
     year: 2025,
     month: 'January',
@@ -110,15 +110,19 @@ export const IncomeTable: TIncomeTableRow[] = [
   }
   return Object.assign(defaultValue, row) as TIncomeTableRow
 })
-export type TIncomeTableSum = Record<Exclude<keyof TIncomeTableRow, 'year' | 'month' | 'totalIncome' | 'comment' | 'totalPureIncome'>, number>
+export type TIncomeTableSum = Record<Exclude<keyof TIncomeTableRow, 'year' | 'month' | 'comment'>, number>
 export const IncomeTableSum: TIncomeTableSum = {
-  wageIncome: IncomeTable.reduce((a, b) => a + (b.wageIncome ?? 0), 0),
-  fundIncome: IncomeTable.reduce((a, b) => a + (b.fundIncome ?? 0), 0),
-  partTimeIncome: IncomeTable.reduce((a, b) => a + (b.partTimeIncome ?? 0), 0),
-  investmentIncome: IncomeTable.reduce((a, b) => a + (b.investmentIncome ?? 0), 0),
-  otherIncome: IncomeTable.reduce((a, b) => a + (b.otherIncome ?? 0), 0),
-  transferIncome: IncomeTable.reduce((a, b) => a + (b.transferIncome ?? 0), 0),
+  wageIncome: IncomeTableData.reduce((a, b) => a + (b.wageIncome ?? 0), 0),
+  fundIncome: IncomeTableData.reduce((a, b) => a + (b.fundIncome ?? 0), 0),
+  partTimeIncome: IncomeTableData.reduce((a, b) => a + (b.partTimeIncome ?? 0), 0),
+  investmentIncome: IncomeTableData.reduce((a, b) => a + (b.investmentIncome ?? 0), 0),
+  otherIncome: IncomeTableData.reduce((a, b) => a + (b.otherIncome ?? 0), 0),
+  totalPureIncome: 0,
+  transferIncome: IncomeTableData.reduce((a, b) => a + (b.transferIncome ?? 0), 0),
+  totalIncome: 0,
 }
+IncomeTableSum.totalIncome = Object.entries(IncomeTableSum).reduce((a, b) => a + b[1], 0)
+IncomeTableSum.totalPureIncome = IncomeTableSum.totalIncome - IncomeTableSum.transferIncome
 
 /**
  * 支出表
@@ -360,7 +364,7 @@ export const BalanceTable: TBalanceTableRow[] = [
     loans: [{ value: 137591.18, header: '剩余房贷' }],
   },
 ].map(row => {
-  row.totalIncome = IncomeTable.find(r => r.year === row.year && r.month === row.month)?.totalIncome
+  row.totalIncome = IncomeTableData.find(r => r.year === row.year && r.month === row.month)?.totalIncome
   row.totalOutcome = OutcomeTable.find(r => r.year === row.year && r.month === row.month)?.totalOutcome
   return row as TBalanceTableRow
 })
@@ -497,7 +501,7 @@ export const NumberCardListData = (() => {
     },
     {
       title: '月均工资',
-      value: formatNumber(IncomeTableSum.wageIncome / IncomeTable.length),
+      value: formatNumber(IncomeTableSum.wageIncome / IncomeTableData.length),
       description: '年初至今的月均工资收入',
     },
     {
