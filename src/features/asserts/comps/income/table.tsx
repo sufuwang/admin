@@ -127,7 +127,7 @@ export default function ResumeTable() {
             <TableRow key={i}>
               {columns.map((col, index) => (
                 <TableCell key={col.key} {...getFixedColumnClassname(index)}>
-                  {col.render ? col.render(row[col.key]) : row[col.key]}
+                  {col.render ? col.render(row[col.key]) : ((row[col.key] || '-') as string)}
                 </TableCell>
               ))}
             </TableRow>

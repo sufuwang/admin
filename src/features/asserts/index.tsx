@@ -1,69 +1,44 @@
-import { useState } from 'react'
 import {
-  BalanceTable as BalanceTableData,
-  IncomeTableData,
-  OutcomeTableData as OutcomeTableData,
-  ResumeTableData as ResumeTableData,
   NumberCardListData,
-  BalanceTableSum,
 } from '@/data/asserts'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import DashboardHeader from '@/components/dashboard-header'
 import { Main } from '@/components/layout/main'
 import NumberCardList from '@/components/number-card-list'
-import YearPicker, { defaultYear } from '@/components/year-picker'
-import LineChart from './line-chart'
-import PieChart from './pie-chart'
-import { BalanceTable } from './table'
+// import LineChart from './line-chart'
+// import PieChart from './pie-chart'
+// import { BalanceTableData } from './table'
 
-import Resume from './comps/resume'
+import Balance from './comps/balance'
 import Income from './comps/income'
 import Outcome from './comps/outcome'
+import Resume from './comps/resume'
 
 const Comps = [
   {
     key: 'Balance',
     label: '资产负债表',
-    table: {
-      comp: BalanceTable,
-      data: BalanceTableData,
-    },
-    lineChart: {
-      dataKeys: ['totalIncome', 'totalOutcome'],
-      complexDataKeys: ['balances_CNY', 'balances_HKD']
-    },
-    pieChart: {
-      data: BalanceTableSum
-    }
+    comp: Balance,
   },
   {
     key: 'Income',
     label: '收入表',
-    table: {
-      comp: Income,
-      data: IncomeTableData,
-    },
+    comp: Income,
   },
   {
     key: 'Outcome',
     label: '支出表',
-    table: {
-      comp: Outcome,
-      data: OutcomeTableData,
-    },
+    comp: Outcome,
   },
   {
     key: 'Resume',
     label: '履历表',
-    table: {
-      comp: Resume,
-      data: ResumeTableData,
-    },
+    comp: Resume,
   },
 ]
 
 export default function Asserts() {
-  const [curYear, setYear] = useState(+defaultYear)
+  // const [curYear, setYear] = useState(+defaultYear)
 
   return (
     <>
@@ -84,26 +59,20 @@ export default function Asserts() {
                   </TabsTrigger>
                 ))}
               </TabsList>
-              <YearPicker onChange={(d) => setYear(d)} />
+              {/* <YearPicker onChange={(d) => setYear(d)} /> */}
             </div>
             {Comps.map((row) => {
-              const data = row.table.data.filter((d) => {
-                if ((d as { year?: number }).year === undefined) {
-                  return true
-                }
-                return curYear === 0 ? true : (d as { year?: number }).year === curYear
-              })
               return (
                 <TabsContent
                   className='space-y-4'
                   key={row.key}
                   value={row.key}
                 >
-                  {row.table.comp({ data })}
-                  <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
+                  {row.comp()}
+                  {/* <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
                     {row.lineChart && <LineChart id={row.key} dataKeys={row.lineChart.dataKeys} complexDataKeys={row.lineChart.complexDataKeys} data={data} />}
                     {row.pieChart && <PieChart data={row.pieChart.data} />}
-                  </div>
+                  </div> */}
                 </TabsContent>
               )
             })}

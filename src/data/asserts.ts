@@ -289,7 +289,7 @@ export type TBalanceTableRow = {
   loans?: { value: number; header: string }[]
   comment?: string
 }
-export const BalanceTable: TBalanceTableRow[] = [
+export const BalanceTableData: TBalanceTableRow[] = [
   {
     year: 2025,
     month: 'January',
@@ -372,8 +372,8 @@ export const BalanceTable: TBalanceTableRow[] = [
 })
 export type TBalanceTableSum = Record<'totalIncome' | 'totalOutcome', number>
 export const BalanceTableSum: TBalanceTableSum = {
-  totalIncome: BalanceTable.reduce((a, b) => a + (b.totalIncome ?? 0), 0),
-  totalOutcome: BalanceTable.reduce((a, b) => a + (b.totalOutcome ?? 0), 0),
+  totalIncome: BalanceTableData.reduce((a, b) => a + (b.totalIncome ?? 0), 0),
+  totalOutcome: BalanceTableData.reduce((a, b) => a + (b.totalOutcome ?? 0), 0),
 }
 
 
@@ -465,7 +465,7 @@ export const ResumeTableSum: TResumeTableRowSum = {
  */
 export const NumberCardListData = (() => {
   const rows = []
-  const lastCNYRow = BalanceTable.findLast((row) => row.balances?.length)!.balances?.find((b) => b.abbr === 'CNY')
+  const lastCNYRow = BalanceTableData.findLast((row) => row.balances?.length)!.balances?.find((b) => b.abbr === 'CNY')
   if (lastCNYRow) {
     rows.push({
       title: '人民币余额',
@@ -473,7 +473,7 @@ export const NumberCardListData = (() => {
       description: `较上月增长 ${formatNumber(lastCNYRow.MoM || 0)}<br />较去年同期增长 ${formatNumber(lastCNYRow.YoY || 0)}`,
     })
   }
-  const lastHKDRow = BalanceTable.findLast((row) => row.balances?.length)!.balances?.find((b) => b.abbr === 'HKD')
+  const lastHKDRow = BalanceTableData.findLast((row) => row.balances?.length)!.balances?.find((b) => b.abbr === 'HKD')
   if (lastHKDRow) {
     rows.push({
       title: '港币余额',
@@ -481,7 +481,7 @@ export const NumberCardListData = (() => {
       description: `较上月增长 ${formatNumber(lastHKDRow.MoM || 0)}<br />较去年同期增长 ${formatNumber(lastHKDRow.YoY || 0)}`,
     })
   }
-  const curYearRows = BalanceTable.filter(row => row.year === curYear)
+  const curYearRows = BalanceTableData.filter(row => row.year === curYear)
   const totalIncome = +curYearRows.reduce((a, b) => a + b.totalIncome, 0)
   const totalOutcome = +curYearRows.reduce((a, b) => a + b.totalOutcome, 0)
   rows.push(...[
@@ -497,7 +497,7 @@ export const NumberCardListData = (() => {
     },
     {
       title: '月均收入',
-      value: formatNumber(totalIncome / BalanceTable.length),
+      value: formatNumber(totalIncome / BalanceTableData.length),
       description: '年初至今的月均收入',
     },
     {
@@ -507,7 +507,7 @@ export const NumberCardListData = (() => {
     },
     {
       title: '月均支出',
-      value: formatNumber(totalOutcome / BalanceTable.length),
+      value: formatNumber(totalOutcome / BalanceTableData.length),
       description: '年初至今的月均支出',
     },
     {
