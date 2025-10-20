@@ -113,11 +113,11 @@ export default function ResumeTable() {
       <Table>
         <TableHeader>
           <TableRow ref={tableRowRef}>
-            {Object.keys(IncomeTableData[0]).map((accessorKey, index) => (
-              <TableHead key={accessorKey} {...getFixedColumnClassname(index)}>
-                {ColumnKeys[accessorKey as keyof typeof ColumnKeys] ||
-                  getColumnAlias(accessorKey) ||
-                  accessorKey}
+            {columns.map(({ key }, index) => (
+              <TableHead key={key} {...getFixedColumnClassname(index)}>
+                {ColumnKeys[key as keyof typeof ColumnKeys] ||
+                  getColumnAlias(key) ||
+                  key}
               </TableHead>
             ))}
           </TableRow>

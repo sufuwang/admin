@@ -455,9 +455,8 @@ export const ResumeTableSum: TResumeTableRowSum = {
   medicalInsurance: ResumeTableData.reduce((a, b) => a + b.medicalInsurance, 0),
   unemploymentInsurance: ResumeTableData.reduce((a, b) => a + b.unemploymentInsurance, 0),
   singleAccumulationFund: ResumeTableData.reduce((a, b) => a + b.singleAccumulationFund, 0),
-  averageMonthlyIncome: 0
+  averageMonthlyIncome: ResumeTableData.reduce((a, b) => a + b.averageMonthlyIncome, 0),
 }
-ResumeTableSum.averageMonthlyIncome = Object.entries(ResumeTableSum).filter(row => row[0] !== 'month').reduce((a, b) => a + b[1], 0) / ResumeTableSum.month
 
 /**
  * 卡片列表

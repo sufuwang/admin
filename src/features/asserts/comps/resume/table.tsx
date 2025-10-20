@@ -54,12 +54,6 @@ const columns: { key: keyof TResumeTableRow; render?: (r: any) => string }[] = [
     render: formatNumber,
   },
 ]
-const calcTotal = (key: keyof TResumeTableRow) => {
-  return ResumeTableData.map((r) => r[key] as number).reduce(
-    (a, b) => a + (b ?? 0),
-    0
-  )
-}
 
 export default function ResumeTable() {
   const divRef = useRef<HTMLTableRowElement>(null)
@@ -94,11 +88,11 @@ export default function ResumeTable() {
       <Table>
         <TableHeader>
           <TableRow>
-            {Object.keys(ResumeTableData[0]).map((accessorKey, index) => (
-              <TableHead key={accessorKey} {...getFixedColumnClassname(index)}>
-                {ColumnKeys[accessorKey as keyof typeof ColumnKeys] ||
-                  getColumnAlias(accessorKey) ||
-                  accessorKey}
+            {columns.map(({ key }, index) => (
+              <TableHead key={key} {...getFixedColumnClassname(index)}>
+                {ColumnKeys[key as keyof typeof ColumnKeys] ||
+                  getColumnAlias(key) ||
+                  key}
               </TableHead>
             ))}
           </TableRow>
@@ -120,7 +114,7 @@ export default function ResumeTable() {
               总和
             </TableCell>
             <TableCell>共{ResumeTableData.length}家公司</TableCell>
-            <TableCell>{calcTotal('month')}</TableCell>
+            <TableCell>{ResumeTableSum.month}</TableCell>
             {columns.slice(3).map((col) => (
               <TableCell key={col.key}>
                 {formatNumber(
@@ -135,11 +129,11 @@ export default function ResumeTable() {
             </TableCell>
             <TableCell>-</TableCell>
             <TableCell>
-              {(calcTotal('month') / ResumeTableData.length).toFixed(2)}
+              {(ResumeTableSum.month / ResumeTableData.length).toFixed(2)}
             </TableCell>
             {columns.slice(3).map((col) => (
               <TableCell key={col.key}>
-                {formatNumber(calcTotal(col.key) / ResumeTableData.length)}
+                {formatNumber(ResumeTableSum[col.key as keyof TResumeTableRowSum] / ResumeTableData.length)}
               </TableCell>
             ))}
           </TableRow>
