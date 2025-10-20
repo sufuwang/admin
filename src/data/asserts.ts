@@ -141,7 +141,7 @@ export type TOutcomeTableRow = {
   otherOutcome?: number
   comment?: string
 }
-export const OutcomeTable: TOutcomeTableRow[] = [
+export const OutcomeTableData: TOutcomeTableRow[] = [
   {
     year: 2025,
     month: 'January',
@@ -258,17 +258,19 @@ export const OutcomeTable: TOutcomeTableRow[] = [
   }
   return Object.assign(defaultValue, row) as TOutcomeTableRow
 })
-export type TOutcomeTableSum = Record<Exclude<keyof TOutcomeTableRow, 'year' | 'month' | 'totalOutcome' | 'comment'>, number>
+export type TOutcomeTableSum = Record<Exclude<keyof TOutcomeTableRow, 'year' | 'month' | 'comment'>, number>
 export const OutcomeTableSum: TOutcomeTableSum = {
-  loans: OutcomeTable.reduce((a, b) => a + (b.loans?.reduce((c, d) => c + d.value, 0) ?? 0), 0),
-  houseOutcome: OutcomeTable.reduce((a, b) => a + (b.houseOutcome ?? 0), 0),
-  foodOutcome: OutcomeTable.reduce((a, b) => a + (b.foodOutcome ?? 0), 0),
-  transportOutcome: OutcomeTable.reduce((a, b) => a + (b.transportOutcome ?? 0), 0),
-  relativeOutcome: OutcomeTable.reduce((a, b) => a + (b.relativeOutcome ?? 0), 0),
-  specialOutcome: OutcomeTable.reduce((a, b) => a + (b.specialOutcome ?? 0), 0),
-  bulkOutcome: OutcomeTable.reduce((a, b) => a + (b.bulkOutcome ?? 0), 0),
-  otherOutcome: OutcomeTable.reduce((a, b) => a + (b.otherOutcome ?? 0), 0),
+  loans: OutcomeTableData.reduce((a, b) => a + (b.loans?.reduce((c, d) => c + d.value, 0) ?? 0), 0),
+  houseOutcome: OutcomeTableData.reduce((a, b) => a + (b.houseOutcome ?? 0), 0),
+  foodOutcome: OutcomeTableData.reduce((a, b) => a + (b.foodOutcome ?? 0), 0),
+  transportOutcome: OutcomeTableData.reduce((a, b) => a + (b.transportOutcome ?? 0), 0),
+  relativeOutcome: OutcomeTableData.reduce((a, b) => a + (b.relativeOutcome ?? 0), 0),
+  specialOutcome: OutcomeTableData.reduce((a, b) => a + (b.specialOutcome ?? 0), 0),
+  bulkOutcome: OutcomeTableData.reduce((a, b) => a + (b.bulkOutcome ?? 0), 0),
+  otherOutcome: OutcomeTableData.reduce((a, b) => a + (b.otherOutcome ?? 0), 0),
+  totalOutcome: 0,
 }
+OutcomeTableSum.totalOutcome = Object.entries(OutcomeTableSum).reduce((a, b) => a + b[1], 0)
 
 /**
  * 资产负债表
@@ -365,7 +367,7 @@ export const BalanceTable: TBalanceTableRow[] = [
   },
 ].map(row => {
   row.totalIncome = IncomeTableData.find(r => r.year === row.year && r.month === row.month)?.totalIncome
-  row.totalOutcome = OutcomeTable.find(r => r.year === row.year && r.month === row.month)?.totalOutcome
+  row.totalOutcome = OutcomeTableData.find(r => r.year === row.year && r.month === row.month)?.totalOutcome
   return row as TBalanceTableRow
 })
 export type TBalanceTableSum = Record<'totalIncome' | 'totalOutcome', number>
@@ -510,7 +512,7 @@ export const NumberCardListData = (() => {
     },
     {
       title: '月均餐饮支出',
-      value: formatNumber(OutcomeTableSum.foodOutcome / OutcomeTable.length),
+      value: formatNumber(OutcomeTableSum.foodOutcome / OutcomeTableData.length),
       description: '年初至今的月均餐饮支出',
     }
   ])

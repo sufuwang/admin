@@ -2,11 +2,10 @@ import { useState } from 'react'
 import {
   BalanceTable as BalanceTableData,
   IncomeTableData,
-  OutcomeTable as OutcomeTableData,
+  OutcomeTableData as OutcomeTableData,
   ResumeTableData as ResumeTableData,
   NumberCardListData,
   BalanceTableSum,
-  OutcomeTableSum,
 } from '@/data/asserts'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import DashboardHeader from '@/components/dashboard-header'
@@ -15,10 +14,11 @@ import NumberCardList from '@/components/number-card-list'
 import YearPicker, { defaultYear } from '@/components/year-picker'
 import LineChart from './line-chart'
 import PieChart from './pie-chart'
-import { BalanceTable, OutcomeTable } from './table'
+import { BalanceTable } from './table'
 
 import Resume from './comps/resume'
 import Income from './comps/income'
+import Outcome from './comps/outcome'
 
 const Comps = [
   {
@@ -48,24 +48,9 @@ const Comps = [
     key: 'Outcome',
     label: '支出表',
     table: {
-      comp: OutcomeTable,
+      comp: Outcome,
       data: OutcomeTableData,
     },
-    lineChart: {
-      dataKeys: [
-        'houseOutcome',
-        'foodOutcome',
-        'transportOutcome',
-        'relativeOutcome',
-        'specialOutcome',
-        'bulkOutcome',
-        // 'otherOutcome',
-      ],
-      complexDataKeys: ['loans_房贷还款']
-    },
-    pieChart: {
-      data: OutcomeTableSum
-    }
   },
   {
     key: 'Resume',
