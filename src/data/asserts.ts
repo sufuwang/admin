@@ -385,7 +385,7 @@ export interface TResumeTableRow {
   singleAccumulationFund: number
   averageMonthlyIncome: number // 忽略个税
 }
-export const ResumeTable: TResumeTableRow[] = [
+export const ResumeTableData: TResumeTableRow[] = [
   {
     company: '腾讯',
     date: ['2021.7', '2022.10'],
@@ -445,12 +445,12 @@ export const ResumeTable: TResumeTableRow[] = [
 })
 export type TResumeTableRowSum = Pick<TResumeTableRow, Exclude<keyof TResumeTableRow, 'company' | 'date'>>
 export const ResumeTableSum: TResumeTableRowSum = {
-  month: ResumeTable.reduce((a, b) => a + b.month, 0),
-  pretaxIncome: ResumeTable.reduce((a, b) => a + b.pretaxIncome, 0),
-  oldAgeInsurance: ResumeTable.reduce((a, b) => a + b.oldAgeInsurance, 0),
-  medicalInsurance: ResumeTable.reduce((a, b) => a + b.medicalInsurance, 0),
-  unemploymentInsurance: ResumeTable.reduce((a, b) => a + b.unemploymentInsurance, 0),
-  singleAccumulationFund: ResumeTable.reduce((a, b) => a + b.singleAccumulationFund, 0),
+  month: ResumeTableData.reduce((a, b) => a + b.month, 0),
+  pretaxIncome: ResumeTableData.reduce((a, b) => a + b.pretaxIncome, 0),
+  oldAgeInsurance: ResumeTableData.reduce((a, b) => a + b.oldAgeInsurance, 0),
+  medicalInsurance: ResumeTableData.reduce((a, b) => a + b.medicalInsurance, 0),
+  unemploymentInsurance: ResumeTableData.reduce((a, b) => a + b.unemploymentInsurance, 0),
+  singleAccumulationFund: ResumeTableData.reduce((a, b) => a + b.singleAccumulationFund, 0),
   averageMonthlyIncome: 0
 }
 ResumeTableSum.averageMonthlyIncome = Object.entries(ResumeTableSum).filter(row => row[0] !== 'month').reduce((a, b) => a + b[1], 0) / ResumeTableSum.month

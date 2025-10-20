@@ -3,7 +3,7 @@ import {
   BalanceTable as BalanceTableData,
   IncomeTable as IncomeTableData,
   OutcomeTable as OutcomeTableData,
-  ResumeTable as ResumeTableData,
+  ResumeTableData as ResumeTableData,
   NumberCardListData,
   BalanceTableSum,
   IncomeTableSum,
@@ -16,7 +16,9 @@ import NumberCardList from '@/components/number-card-list'
 import YearPicker, { defaultYear } from '@/components/year-picker'
 import LineChart from './line-chart'
 import PieChart from './pie-chart'
-import { BalanceTable, IncomeTable, OutcomeTable, ResumeTable } from './table'
+import { BalanceTable, IncomeTable, OutcomeTable } from './table'
+
+import Resume from './comps/resume'
 
 const Comps = [
   {
@@ -83,7 +85,7 @@ const Comps = [
     key: 'Resume',
     label: '履历表',
     table: {
-      comp: ResumeTable,
+      comp: Resume,
       data: ResumeTableData,
     },
   },
