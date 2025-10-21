@@ -40,8 +40,8 @@ export default function RevenueChart() {
   )
 
   return (
-    <Card className='w-full'>
-      <CardContent>
+    <Card className='w-full p-2 pb-0 lg:p-4 lg:pb-2'>
+      <CardContent className='p-0'>
         <ChartContainer config={chartConfig}>
           <LineChart data={data}>
             <ChartTooltip content={<ChartTooltipContent />} />
