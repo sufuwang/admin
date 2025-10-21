@@ -1,13 +1,8 @@
-import {
-  NumberCardListData,
-} from '@/data/asserts'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import DashboardHeader from '@/components/dashboard-header'
 import { Main } from '@/components/layout/main'
 import NumberCardList from '@/components/number-card-list'
-// import LineChart from './line-chart'
-// import PieChart from './pie-chart'
-// import { BalanceTableData } from './table'
+import { NumberCardListData } from '@/data/asserts'
 
 import Balance from './comps/balance'
 import Income from './comps/income'
@@ -69,10 +64,6 @@ export default function Asserts() {
                   value={row.key}
                 >
                   {row.comp()}
-                  {/* <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
-                    {row.lineChart && <LineChart id={row.key} dataKeys={row.lineChart.dataKeys} complexDataKeys={row.lineChart.complexDataKeys} data={data} />}
-                    {row.pieChart && <PieChart data={row.pieChart.data} />}
-                  </div> */}
                 </TabsContent>
               )
             })}
