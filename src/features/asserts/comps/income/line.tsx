@@ -1,4 +1,8 @@
+import { IncomeTableData } from '@/data/asserts'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
+import { ColumnKeys, getColumnAlias, type TColumnKeys } from '@/lib/const'
+import { formatNumber, getColor } from '@/lib/utils'
+import useLegends from '@/hooks/use-legends'
 import { Card, CardContent } from '@/components/ui/card'
 import {
   ChartContainer,
@@ -7,24 +11,20 @@ import {
   ChartLegend,
   ChartLegendContent,
 } from '@/components/ui/chart'
-import { BalanceTableData, type TBalanceTableRow } from '@/data/asserts'
-import { formatNumber, getColor } from '@/lib/utils'
-import { ColumnKeys, getColumnAlias, type TColumnKeys } from '@/lib/const'
-import useLegends from '@/hooks/use-legends'
-
-type Row = TBalanceTableRow & {
-  balances_CNY: number
-  balances_HKD: number
-}
 
 export default function RevenueChart() {
-  const { legends, onClickLegend } = useLegends({ id: 'balance', defaultLegends: ['totalIncome', 'totalOutcome', 'balances_CNY', 'balances_HKD'].map(key => ({ key, visible: true })) })
-
-  const data: Row[] = BalanceTableData.map(row => {
-    return { ...row,
-      balances_CNY: row.balances?.find(r => r.abbr === 'CNY')?.value || 0,
-      balances_HKD: row.balances?.find(r => r.abbr === 'HKD')?.value || 0
-    }
+  const { legends, onClickLegend } = useLegends({
+    id: 'income',
+    defaultLegends: [
+      'wageIncome',
+      'fundIncome',
+      'partTimeIncome',
+      'investmentIncome',
+      'otherIncome',
+      'totalPureIncome',
+      'transferIncome',
+      'totalIncome',
+    ].map((key) => ({ key, visible: true })),
   })
 
   const chartConfig = Object.fromEntries(
@@ -43,7 +43,7 @@ export default function RevenueChart() {
     <Card className='w-full p-2 pb-0 lg:p-4 lg:pb-2'>
       <CardContent className='p-0'>
         <ChartContainer config={chartConfig}>
-          <LineChart data={data}>
+          <LineChart data={IncomeTableData}>
             <ChartTooltip content={<ChartTooltipContent />} />
             <ChartLegend
               content={
@@ -66,22 +66,22 @@ export default function RevenueChart() {
             <YAxis
               stroke='#888888'
               fontSize={12}
-              tickFormatter={(label) => formatNumber(+label, 'CNY').slice(0, -3)}
+              tickFormatter={(label) =>
+                formatNumber(+label, 'CNY').slice(0, -3)
+              }
             />
             <Tooltip />
-            {
-              legends.map((row, index) => (
-                <Line
-                  type='monotone'
-                  dot={{ r: 4 }}
-                  strokeWidth={2}
-                  activeDot={{ r: 6 }}
-                  dataKey={row.key}
-                  hide={!row.visible}
-                  stroke={getColor(index)}
-                />
-              ))
-            }
+            {legends.map((row, index) => (
+              <Line
+                type='monotone'
+                dot={{ r: 4 }}
+                strokeWidth={2}
+                activeDot={{ r: 6 }}
+                dataKey={row.key}
+                hide={!row.visible}
+                stroke={getColor(index)}
+              />
+            ))}
           </LineChart>
         </ChartContainer>
       </CardContent>
