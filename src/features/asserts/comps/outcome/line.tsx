@@ -1,8 +1,15 @@
-import { IncomeTableData } from '@/data/asserts'
-import { LineChart, Line as RLine, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
+import { OutcomeTableData, type TOutcomeTableRow } from '@/data/asserts'
+import {
+  LineChart,
+  Line as RLine,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+} from 'recharts'
 import { ColumnKeys, getColumnAlias, type TColumnKeys } from '@/lib/const'
 import { formatNumber, getColor } from '@/lib/utils'
-import useLegends from '@/hooks/use-legends'
+import useLegends, { type Legend } from '@/hooks/use-legends'
 import { Card, CardContent } from '@/components/ui/card'
 import {
   ChartContainer,
@@ -12,27 +19,43 @@ import {
   ChartLegendContent,
 } from '@/components/ui/chart'
 
+const defaultLegends: Legend[] = [
+  {
+    key: 'loans',
+    label: '房贷还款',
+    dataKey: (row: TOutcomeTableRow) => {
+      return row.loans?.[0].value ?? 0
+    },
+    visible: true,
+  },
+  ...[
+    'houseOutcome',
+    'foodOutcome',
+    'transportOutcome',
+    'relativeOutcome',
+    'specialOutcome',
+    'bulkOutcome',
+    'otherOutcome',
+    'totalOutcome',
+  ].map((key) => ({ key, visible: true })),
+]
+
 export default function Line() {
   const { legends, onClickLegend } = useLegends({
-    id: 'income',
-    defaultLegends: [
-      'wageIncome',
-      'fundIncome',
-      'partTimeIncome',
-      'investmentIncome',
-      'otherIncome',
-      'totalPureIncome',
-      'transferIncome',
-      'totalIncome',
-    ].map((key) => ({ key, visible: true })),
+    id: 'outcome',
+    defaultLegends,
   })
 
   const chartConfig = Object.fromEntries(
-    legends.map(({ key }, index) => {
+    legends.map(({ key, label }, index) => {
       return [
         key,
         {
-          label: ColumnKeys[key as TColumnKeys] || getColumnAlias(key) || 'x',
+          label:
+            label ||
+            ColumnKeys[key as TColumnKeys] ||
+            getColumnAlias(key) ||
+            'x',
           color: getColor(index),
         },
       ]
@@ -43,12 +66,12 @@ export default function Line() {
     <Card className='w-full p-2 pb-0 lg:p-4 lg:pb-2'>
       <CardContent className='p-0'>
         <ChartContainer config={chartConfig}>
-          <LineChart data={IncomeTableData}>
+          <LineChart data={OutcomeTableData}>
             <ChartTooltip content={<ChartTooltipContent />} />
             <ChartLegend
               content={
                 <ChartLegendContent
-                  defaultLegendsValue={legends}
+                  defaultLegendsValue={defaultLegends}
                   onClickLegend={onClickLegend}
                 />
               }
@@ -71,14 +94,15 @@ export default function Line() {
               }
             />
             <Tooltip />
-            {legends.map((row, index) => (
+            {defaultLegends.map((row, index) => (
               <RLine
                 type='monotone'
                 dot={{ r: 4 }}
                 strokeWidth={2}
                 activeDot={{ r: 6 }}
-                dataKey={row.key}
-                hide={!row.visible}
+                dataKey={row.dataKey ?? row.key}
+                name={row.key}
+                hide={!legends.find((l) => l.key === row.key)?.visible}
                 stroke={getColor(index)}
               />
             ))}

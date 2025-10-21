@@ -1,4 +1,4 @@
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
+import { LineChart, Line as RLine, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
 import { Card, CardContent } from '@/components/ui/card'
 import {
   ChartContainer,
@@ -17,7 +17,7 @@ type Row = TBalanceTableRow & {
   balances_HKD: number
 }
 
-export default function RevenueChart() {
+export default function Line() {
   const { legends, onClickLegend } = useLegends({ id: 'balance', defaultLegends: ['totalIncome', 'totalOutcome', 'balances_CNY', 'balances_HKD'].map(key => ({ key, visible: true })) })
 
   const data: Row[] = BalanceTableData.map(row => {
@@ -71,7 +71,7 @@ export default function RevenueChart() {
             <Tooltip />
             {
               legends.map((row, index) => (
-                <Line
+                <RLine
                   type='monotone'
                   dot={{ r: 4 }}
                   strokeWidth={2}
