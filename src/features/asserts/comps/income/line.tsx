@@ -40,7 +40,7 @@ export default function Line() {
   )
 
   return (
-    <Card className='w-full p-2 pb-0 lg:p-4 lg:pb-2'>
+    <Card className='w-full p-4 pb-2'>
       <CardContent className='p-0'>
         <ChartContainer config={chartConfig}>
           <LineChart data={IncomeTableData}>
