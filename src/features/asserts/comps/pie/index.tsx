@@ -1,4 +1,4 @@
-import { PieChart as RPieChart, Pie, Cell } from 'recharts'
+import { PieChart, Pie as RPie, Cell } from 'recharts'
 import { ColumnKeys, getColumnAlias, i18n, type TColumnKeys, type Ti18n } from '@/lib/const'
 import { isMobile, getColor } from '@/lib/utils'
 import { Card, CardContent } from '@/components/ui/card'
@@ -9,18 +9,23 @@ import {
   ChartLegend,
   ChartLegendContent,
 } from '@/components/ui/chart'
-import type { TBalanceTableSum, TIncomeTableSum, TOutcomeTableSum, TResumeTableRowSum } from '@/data/asserts'
 
-interface Props {
-  data: TBalanceTableSum | TIncomeTableSum | TOutcomeTableSum | TResumeTableRowSum
+interface Props<T extends Record<string, number>> {
+  data: T
+  dataKeys?: (keyof T)[]
 }
 
 const getLabel = (key: string) => {
+  if (key === 'loans') {
+    return '房贷还款'
+  }
   return ColumnKeys[key as TColumnKeys] || i18n[key as keyof Ti18n] || getColumnAlias(key) || key
 }
 
-export default function PieChart(props: Props) {
-  const _data = Object.entries(props.data).sort((a, b) => a[1] > b[1] ? -1 : 1)
+export default function Pie<T extends Record<string, number>>(props: Props<T>) {
+  const _data = Object.entries(props.data)
+    .filter(([dataKey]) => props.dataKeys?.length ? props.dataKeys.includes(dataKey) : true)
+    .sort((a, b) => a[1] > b[1] ? -1 : 1)
   const data = ([
     ..._data.slice(0, 4),
     ['restCategories', _data.slice(4).reduce((a, b) => a + b[1], 0) ]
@@ -39,13 +44,13 @@ export default function PieChart(props: Props) {
   )
 
   return (
-    <Card className={`py-4 ${isMobile() && 'gap-0 pt-2 pb-0'} justify-center`}>
-      <CardContent className={`px-4 ${isMobile() && 'px-2 pt-0 pb-2'}`}>
+    <Card className='py-0 lg:py-2'>
+      <CardContent className='p-0'>
         <ChartContainer config={chartConfig}>
-          <RPieChart margin={{ top: isMobile() ? 28 : 10, bottom: 10 }}>
+          <PieChart margin={{ top: isMobile() ? 26 : 16, bottom: 10 }}>
             <ChartTooltip content={<ChartTooltipContent />} />
             <ChartLegend className='mt-4' content={<ChartLegendContent />} />
-            <Pie
+            <RPie
               data={data}
               dataKey="value"
               nameKey="name"
@@ -54,8 +59,8 @@ export default function PieChart(props: Props) {
               }
             >
               {data.map((row, index) => <Cell key={`cell-${row.name}`} fill={getColor(index)} />)}
-            </Pie>
-          </RPieChart>
+            </RPie>
+          </PieChart>
         </ChartContainer>
       </CardContent>
     </Card>

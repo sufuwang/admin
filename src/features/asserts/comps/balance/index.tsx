@@ -9,7 +9,7 @@ export default function Resume() {
       <Table />
       <div className='grid gap-4 grid-cols-1 lg:grid-cols-2'>
         <Line />
-        <Pie data={BalanceTableSum} />
+        <Pie data={BalanceTableSum} dataKeys={['totalIncome', 'totalOutcome']} />
       </div>
     </>
   )

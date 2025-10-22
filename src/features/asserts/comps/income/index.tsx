@@ -9,7 +9,7 @@ export default function Resume() {
       <Table />
       <div className='grid gap-4 grid-cols-1 lg:grid-cols-2'>
         <Line />
-        <Pie data={IncomeTableSum} />
+        <Pie data={IncomeTableSum} dataKeys={['fundIncome', 'investmentIncome', 'partTimeIncome', 'transferIncome', 'wageIncome', 'otherIncome']} />
       </div>
     </>
   )
