@@ -77,6 +77,10 @@ export default function Table({ shares, sharesSum, currency }: Props) {
       key: 'share',
     },
     {
+      key: 'status',
+      render: renderStatus,
+    },
+    {
       key: 'date',
       render: (r) => (Array.isArray(r) ? r.join(' - ') : r),
     },
@@ -106,10 +110,6 @@ export default function Table({ shares, sharesSum, currency }: Props) {
     {
       key: 'earningRate',
       render: (r) => (r ? `${r}%` : '-'),
-    },
-    {
-      key: 'status',
-      render: renderStatus,
     },
   ]
 
@@ -163,14 +163,17 @@ export default function Table({ shares, sharesSum, currency }: Props) {
             </TableRow>
           ))}
         </TableBody>
-        <TableFooter
-          className={cn(
-            sharesSum.earning > 0 ? 'text-red-500' : 'text-green-500'
-          )}
-        >
+        <TableFooter>
           <TableRow>
             <TableCell {...getFixedColumnClassname(0, 'bg-muted')}>
               总和
+            </TableCell>
+            <TableCell key='status'>
+              {renderStatus(
+                sharesSum.earning > 0
+                  ? TShareRowStatus.PROFIT
+                  : TShareRowStatus.LOSS
+              )}
             </TableCell>
             <TableCell>共{shares.length}行</TableCell>
             <TableCell key='days'>-</TableCell>
@@ -188,17 +191,17 @@ export default function Table({ shares, sharesSum, currency }: Props) {
             <TableCell key='earningRate'>
               {sharesSum.earningRate + '%'}
             </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell {...getFixedColumnClassname(0, 'bg-muted')}>
+              平均
+            </TableCell>
             <TableCell key='status'>
               {renderStatus(
                 sharesSum.earning > 0
                   ? TShareRowStatus.PROFIT
                   : TShareRowStatus.LOSS
               )}
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell {...getFixedColumnClassname(0, 'bg-muted')}>
-              平均
             </TableCell>
             {columns.slice(1, -3).map((column) => (
               <TableCell key={column.key}>-</TableCell>
@@ -208,13 +211,6 @@ export default function Table({ shares, sharesSum, currency }: Props) {
             </TableCell>
             <TableCell key='earningRate'>
               {(sharesSum.earningRate / shares.length).toFixed(2) + '%'}
-            </TableCell>
-            <TableCell key='status'>
-              {renderStatus(
-                sharesSum.earning > 0
-                  ? TShareRowStatus.PROFIT
-                  : TShareRowStatus.LOSS
-              )}
             </TableCell>
           </TableRow>
         </TableFooter>

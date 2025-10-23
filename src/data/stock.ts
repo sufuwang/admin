@@ -101,7 +101,7 @@ export const HKShares = handleData([
   },
   {
     code: '03690',
-    share: '美团（腾讯派息）',
+    share: '美团',
     date: ['2021.7.1', '2025.2.17'],
     amount: 1,
     costPrice: 197.8,
@@ -170,7 +170,7 @@ export const HKShares = handleData([
   },
   {
     code: '02595',
-    share: '劲方医药-B',
+    share: '劲方医药',
     date: '2025.9.22',
     amount: 100,
     costPrice: 41,
@@ -178,7 +178,7 @@ export const HKShares = handleData([
   },
   {
     code: '02595',
-    share: '劲方医药-B',
+    share: '劲方医药',
     date: '2025.10.9',
     amount: 100,
     costPrice: 37,
