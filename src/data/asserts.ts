@@ -517,7 +517,9 @@ export const NumberCardListData = (() => {
     }
   ])
   const _IncomeTableSum = Object.entries(IncomeTableSum)
-  const maxIncome = _IncomeTableSum.filter(row => row[0] !== 'investmentIncome').reduce((prev, cur) => cur[1] > prev[1] ? cur : prev, _IncomeTableSum[0])
+  const maxIncome = _IncomeTableSum
+    .filter(row => !['investmentIncome', 'totalIncome', 'totalPureIncome'].includes(row[0]))
+    .reduce((prev, cur) => cur[1] > prev[1] ? cur : prev, _IncomeTableSum[0])
   rows.push({
     title: '最大收入占比',
     value: formatNumber(maxIncome[1] / totalIncome, '%'),
@@ -536,7 +538,9 @@ export const NumberCardListData = (() => {
     description: '投资收入占今年收入的比率',
   })
   const _OutcomeTableSum = Object.entries(OutcomeTableSum)
-  const maxOutcome = _OutcomeTableSum.filter(row => row[0] !== 'loans').reduce((prev, cur) => cur[1] > prev[1] ? cur : prev, ['', 0])
+  const maxOutcome = _OutcomeTableSum
+    .filter(row => !['loans', 'totalOutcome'].includes(row[0]))
+    .reduce((prev, cur) => cur[1] > prev[1] ? cur : prev, ['', 0])
   rows.push({
     title: '最大支出占比',
     value: formatNumber(maxOutcome[1] / totalOutcome, '%'),
