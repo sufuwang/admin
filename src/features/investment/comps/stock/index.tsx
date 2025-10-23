@@ -8,9 +8,9 @@ export default function Stock() {
 
   const renderTables = () => {
     return Tables.map(({ label, comp }) => <div key={label}>
-        <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight mb-2">
+        <div className="scroll-m-20 text-xl lg:text-2xl font-semibold tracking-tight mb-2">
           {label}
-        </h3>
+        </div>
         {comp()}
       </div>
     )
