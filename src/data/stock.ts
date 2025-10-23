@@ -97,7 +97,7 @@ export const HKShares = [
     return {
       ...row,
       date: [row.date[0], row.date[1]] as [string, string],
-      days: differenceInDays(row.date[1], row.date[0]),
+      days: differenceInDays(row.date[1].replaceAll('.', '-'), row.date[0].replaceAll('.', '-')),
       earning,
       earningRate,
       status: earning === 0 ? '-' : earning > 0 ? TShareRowStatus.PROFIT : TShareRowStatus.LOSS,
