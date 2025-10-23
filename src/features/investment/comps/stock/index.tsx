@@ -1,7 +1,9 @@
 import HK from './hk'
+import US from './us'
 
 const Tables = [
-  { label: '港股投资', comp: HK },
+  { label: '港股交易', comp: HK },
+  { label: '美股交易', comp: US },
 ]
 
 export default function Stock() {

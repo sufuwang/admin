@@ -37,7 +37,51 @@ export type TShareRow =
 
 export type TShareRowKeys = AllKeys<TShareRow>
 
-export const HKShares = [
+export interface TShareSum {
+  cost: number
+  earning: number
+  serviceFee: number
+  earningRate: number
+}
+
+const handleData = (shares: Partial<TShareRow>[]) => {
+  return shares.map((row) => {
+    if (row.status === TShareRowStatus.BUYING) {
+      return row as TShareRow
+    }
+    if (row.amount && row.date && row.costPrice && row.sellPrice && row.serviceFee) {
+      const earning =
+        row.amount * (row.sellPrice - row.costPrice) - row.serviceFee
+      const earningRate =
+        (100 * earning / (row.amount * row.costPrice)).toFixed(2) + '%'
+      return {
+        ...row,
+        date: [row.date[0], row.date[1]] as [string, string],
+        days: differenceInDays(row.date[1].replaceAll('.', '-'), row.date[0].replaceAll('.', '-')),
+        earning,
+        earningRate,
+        status: earning === 0 ? '-' : earning > 0 ? TShareRowStatus.PROFIT : TShareRowStatus.LOSS,
+      } as TShareRow
+    }
+    return row as TShareRow
+  })
+}
+const handleSum = (shares: TShareRow[]) => {
+  const sum = { cost: 0, serviceFee: 0, earning: 0, earningRate: 0 }
+  shares.reduce((acc, row) => {
+    if ([TShareRowStatus.BUYING, '-'].includes(row.status)) {
+      return acc
+    }
+    acc.earning += row.earning as number
+    acc.cost += row.amount * row.costPrice
+    acc.serviceFee += row.serviceFee
+    return acc
+  }, sum)
+  sum.earningRate = +(100 * sum.earning / sum.cost).toFixed(2)
+  return sum
+}
+
+export const HKShares = handleData([
   {
     code: '00700',
     share: '腾讯',
@@ -85,40 +129,30 @@ export const HKShares = [
     serviceFee: 23.52,
     status: TShareRowStatus.BUYING,
   },
-].map((row) => {
-  if (row.status === TShareRowStatus.BUYING) {
-    return row
-  }
-  if (!row.status) {
-    const earning =
-      row.amount * (row.sellPrice - row.costPrice) - row.serviceFee
-    const earningRate =
-      (100 * earning / (row.amount * row.costPrice)).toFixed(2) + '%'
-    return {
-      ...row,
-      date: [row.date[0], row.date[1]] as [string, string],
-      days: differenceInDays(row.date[1].replaceAll('.', '-'), row.date[0].replaceAll('.', '-')),
-      earning,
-      earningRate,
-      status: earning === 0 ? '-' : earning > 0 ? TShareRowStatus.PROFIT : TShareRowStatus.LOSS,
-    }
-  }
-  return row
-}) as TShareRow[]
+])
+export const HKSharesSum: TShareSum = handleSum(HKShares)
 
-export interface TShareSum {
-  cost: number
-  earning: number
-  serviceFee: number
-  earningRate: number
-}
-export const HKSharesSum: TShareSum = HKShares.reduce((acc, row) => {
-  if ([TShareRowStatus.BUYING, '-'].includes(row.status)) {
-    return acc
-  }
-  acc.earning += row.earning as number
-  acc.cost += row.amount * row.costPrice
-  acc.serviceFee += row.serviceFee
-  return acc
-}, { cost: 0, serviceFee: 0, earning: 0, earningRate: 0 } as TShareSum)
-HKSharesSum.earningRate = +(100 * HKSharesSum.earning / HKSharesSum.cost).toFixed(2)
+export const USShares = handleData([
+  {
+    code: '',
+    share: '霸王茶姬',
+    date: ['2025.4.23', '2025.4.29'],
+    days: 0,
+    amount: 4,
+    costPrice: 31,
+    sellPrice: 33.5,
+    serviceFee: 4.02,
+    status: '-',
+    earning: 0,
+    earningRate: '',
+  },
+])
+export const USSharesSum: TShareSum = handleSum(USShares)
+
+// export const AShares: TShareRow[] = []
+// export const ASharesSum: TShareSum = {
+//   cost: 0,
+//   earning: 0,
+//   serviceFee: 0,
+//   earningRate: 0,
+// }
