@@ -18,7 +18,7 @@ export default function Stock() {
     )
   }
 
-  return <div className='grid gap-12 grid-cols-1'>
+  return <div className='grid gap-6 lg:gap-12 grid-cols-1'>
     {renderTables()}
   </div>
 }
