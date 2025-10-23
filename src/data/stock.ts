@@ -1,3 +1,5 @@
+import { differenceInDays } from 'date-fns'
+
 export type TShareMarket = 'A' | 'HK' | 'US'
 export enum TShareRowStatus {
   PROFIT = 'PROFIT',
@@ -8,7 +10,7 @@ export enum TShareRowStatus {
 export type TShareRow =
   | Readonly<{
       code: string
-      name: string
+      share: string
       date: [string, string]
       days: number
       amount: number
@@ -21,20 +23,24 @@ export type TShareRow =
     }>
   | Readonly<{
       code: string
-      name: string
+      share: string
       date: string
       amount: number
       costPrice: number
       serviceFee: number
       status: TShareRowStatus.BUYING
+      days: undefined
+      sellPrice: undefined
+      earning: undefined
+      earningRate: undefined
     }>
 
 export type TShareRowKeys = AllKeys<TShareRow>
 
-export const AShares = [
+export const HKShares = [
   {
     code: '00700',
-    name: '腾讯',
+    share: '腾讯',
     date: ['2021.7.1', '2025.2.17'],
     days: 0,
     amount: 67,
@@ -44,7 +50,7 @@ export const AShares = [
   },
   {
     code: '',
-    name: '美团（腾讯派息）',
+    share: '美团（腾讯派息）',
     date: ['2021.7.1', '2025.2.17'],
     amount: 1,
     costPrice: 197.8,
@@ -53,7 +59,7 @@ export const AShares = [
   },
   {
     code: '',
-    name: '沪上阿姨',
+    share: '沪上阿姨',
     date: ['2025.5.6', '2025.5.12'],
     amount: 30,
     costPrice: 181,
@@ -62,7 +68,7 @@ export const AShares = [
   },
   {
     code: '',
-    name: '宁德时代',
+    share: '宁德时代',
     date: ['2025.5.20', '2025.5.20'],
     amount: 10,
     costPrice: 295,
@@ -72,7 +78,7 @@ export const AShares = [
 
   {
     code: '',
-    name: '劲方医药-B',
+    share: '劲方医药-B',
     date: '2025.9.22',
     amount: 100,
     costPrice: 41,
@@ -80,7 +86,6 @@ export const AShares = [
     status: TShareRowStatus.BUYING,
   },
 ].map((row) => {
-  row.days = 0
   if (row.status === TShareRowStatus.BUYING) {
     return row
   }
@@ -88,15 +93,32 @@ export const AShares = [
     const earning =
       row.amount * (row.sellPrice - row.costPrice) - row.serviceFee
     const earningRate =
-      ((100 * earning) / (row.amount * row.costPrice)).toFixed(2) + '%'
+      (100 * earning / (row.amount * row.costPrice)).toFixed(2) + '%'
     return {
       ...row,
       date: [row.date[0], row.date[1]] as [string, string],
-      days: 0,
+      days: differenceInDays(row.date[1], row.date[0]),
       earning,
       earningRate,
       status: earning === 0 ? '-' : earning > 0 ? TShareRowStatus.PROFIT : TShareRowStatus.LOSS,
-    } as TShareRow
+    }
   }
   return row
-})
+}) as TShareRow[]
+
+export interface TShareSum {
+  cost: number
+  earning: number
+  serviceFee: number
+  earningRate: number
+}
+export const HKSharesSum: TShareSum = HKShares.reduce((acc, row) => {
+  if ([TShareRowStatus.BUYING, '-'].includes(row.status)) {
+    return acc
+  }
+  acc.earning += row.earning as number
+  acc.cost += row.amount * row.costPrice
+  acc.serviceFee += row.serviceFee
+  return acc
+}, { cost: 0, serviceFee: 0, earning: 0, earningRate: 0 } as TShareSum)
+HKSharesSum.earningRate = +(100 * HKSharesSum.earning / HKSharesSum.cost).toFixed(2)

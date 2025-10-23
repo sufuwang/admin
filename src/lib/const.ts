@@ -54,7 +54,16 @@ export const ColumnKeys = {
   medicalInsurance: '医疗保险',
   unemploymentInsurance: '失业保险',
   singleAccumulationFund: '单边公积金',
-  averageMonthlyIncome: '月均收入'
+  averageMonthlyIncome: '月均收入',
+  share: '股票',
+  days: '持有天数',
+  amount: '数量',
+  costPrice: '成本价',
+  sellPrice: '卖出价',
+  serviceFee: '手续费',
+  earning: '收益',
+  earningRate: '收益率',
+  status: '状态',
 } as const
 export type TColumnKeys = keyof typeof ColumnKeys
 export const getColumnAlias = (name: string) => {
