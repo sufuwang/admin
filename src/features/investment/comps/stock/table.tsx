@@ -30,7 +30,9 @@ interface Props {
 
 export default function Table({ shares, sharesSum, currency }: Props) {
   const divRef = useRef<HTMLTableRowElement>(null)
+  const tableRowRef = useRef<HTMLTableRowElement>(null)
   const [scrollLeft, setScrollLeft] = useState<number>(0)
+  const [headersWidth, setHeadersWidth] = useState<number[]>([])
 
   useLayoutEffect(() => {
     if (divRef.current) {
@@ -40,6 +42,13 @@ export default function Table({ shares, sharesSum, currency }: Props) {
           setScrollLeft(target.scrollLeft)
         }
       })
+    }
+    if (tableRowRef.current) {
+      setHeadersWidth(
+        Array.from(tableRowRef.current.children).map(
+          (child) => child.clientWidth
+        )
+      )
     }
   }, [])
 
@@ -114,15 +123,22 @@ export default function Table({ shares, sharesSum, currency }: Props) {
   ]
 
   const getFixedColumnClassname = (index: number, defaultClassName = '') => {
-    if (scrollLeft === 0 || index > 0) {
+    if (scrollLeft === 0 || index > 1) {
       return {}
     }
-    return {
-      className: cn(
-        'sticky bg-background after:w-[30px] after:h-full after:absolute after:top-0 after:right-[-30px] after:shadow-[inset_8px_0_6px_-6px_rgba(var(--shadow))]',
-        defaultClassName
-      ),
-      style: { left: 0 },
+    if (index === 0) {
+      return {
+        className: cn('sticky bg-background', defaultClassName),
+        style: { left: 0 },
+      }
+    } else if (index === 1) {
+      return {
+        className: cn(
+          'sticky bg-background after:w-[30px] after:h-full after:absolute after:top-0 after:right-[-30px] after:shadow-[inset_8px_0_6px_-6px_rgba(var(--shadow))]',
+          defaultClassName
+        ),
+        style: { left: headersWidth[0] || 0 },
+      }
     }
   }
 
@@ -130,7 +146,7 @@ export default function Table({ shares, sharesSum, currency }: Props) {
     <div className='w-full overflow-hidden rounded-md border' ref={divRef}>
       <RTable>
         <TableHeader>
-          <TableRow>
+          <TableRow ref={tableRowRef}>
             {columns.map(({ key, label }, index) => {
               return (
                 <TableHead key={key} {...getFixedColumnClassname(index)}>
@@ -165,10 +181,8 @@ export default function Table({ shares, sharesSum, currency }: Props) {
         </TableBody>
         <TableFooter>
           <TableRow>
-            <TableCell {...getFixedColumnClassname(0, 'bg-muted')}>
-              总和
-            </TableCell>
-            <TableCell key='status'>
+            <TableCell {...getFixedColumnClassname(0, 'bg-muted')}>总和</TableCell>
+            <TableCell key='status' {...getFixedColumnClassname(1, 'bg-muted')}>
               {renderStatus(
                 sharesSum.earning > 0
                   ? TShareRowStatus.PROFIT
@@ -193,10 +207,8 @@ export default function Table({ shares, sharesSum, currency }: Props) {
             </TableCell>
           </TableRow>
           <TableRow>
-            <TableCell {...getFixedColumnClassname(0, 'bg-muted')}>
-              平均
-            </TableCell>
-            <TableCell key='status'>
+            <TableCell {...getFixedColumnClassname(0, 'bg-muted')}>平均</TableCell>
+            <TableCell key='status' {...getFixedColumnClassname(1, 'bg-muted')}>
               {renderStatus(
                 sharesSum.earning > 0
                   ? TShareRowStatus.PROFIT
