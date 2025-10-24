@@ -174,6 +174,7 @@ export const HKShares = handleData([
     date: '2025.9.22',
     amount: 100,
     costPrice: 41,
+    serviceFee: 23.52,
     status: TShareRowStatus.BUYING,
   },
   {
@@ -182,6 +183,7 @@ export const HKShares = handleData([
     date: '2025.10.9',
     amount: 100,
     costPrice: 37,
+    serviceFee: 22.48,
     status: TShareRowStatus.BUYING,
   },
 ] as TShareRow[])
