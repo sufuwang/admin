@@ -1,4 +1,5 @@
 import Table from './table'
+import Bar from './bar'
 import { AShares, ASharesSum, HKShares, HKSharesSum, USShares, USSharesSum } from '@/data/stock'
 
 const Tables = [
@@ -19,7 +20,10 @@ export default function Stock() {
     )
   }
 
-  return <div className='grid gap-6 lg:gap-12 grid-cols-1'>
-    {renderTables()}
-  </div>
+  return <>
+    <Bar />
+    <div className='mt-8 grid gap-6 lg:gap-12 grid-cols-1'>
+      {renderTables()}
+    </div>
+  </>
 }

@@ -1,3 +1,12 @@
+export enum ExchangeRateType {
+  UKDToCNY = 'UKDToCNY',
+  USToCNY = 'USToCNY'
+}
+export const ExchangeRate: Record<ExchangeRateType, number> = {
+  [ExchangeRateType.UKDToCNY]: 0.9167, // 1 港币兑换 0.917 人民币
+  [ExchangeRateType.USToCNY]: 7.1251,
+}
+
 export const Currencies = [
   { abbr: 'USD', name: '美元' },
   { abbr: 'CNY', name: '人民币' },
