@@ -206,7 +206,7 @@ export default function Table({ shares, sharesSum, currency }: Props) {
               {sharesSum.earningRate + '%'}
             </TableCell>
           </TableRow>
-          <TableRow>
+          {shares.length > 1 && <TableRow>
             <TableCell {...getFixedColumnClassname(0, 'bg-muted')}>平均</TableCell>
             <TableCell key='status' {...getFixedColumnClassname(1, 'bg-muted')}>
               {renderStatus(
@@ -224,7 +224,7 @@ export default function Table({ shares, sharesSum, currency }: Props) {
             <TableCell key='earningRate'>
               {(sharesSum.earningRate / shares.length).toFixed(2) + '%'}
             </TableCell>
-          </TableRow>
+          </TableRow>}
         </TableFooter>
       </RTable>
     </div>
