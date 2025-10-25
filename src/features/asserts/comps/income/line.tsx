@@ -3,7 +3,6 @@ import { LineChart, Line as RLine, XAxis, YAxis, CartesianGrid, Tooltip } from '
 import { ColumnKeys, getColumnAlias, type TColumnKeys } from '@/lib/const'
 import { formatNumber, getColor } from '@/lib/utils'
 import useLegends from '@/hooks/use-legends'
-import { Card, CardContent } from '@/components/ui/card'
 import {
   ChartContainer,
   ChartTooltip,
@@ -11,6 +10,7 @@ import {
   ChartLegend,
   ChartLegendContent,
 } from '@/components/ui/chart'
+import Card from '@/components/base-card'
 
 export default function Line() {
   const { legends, onClickLegend } = useLegends({
@@ -40,51 +40,49 @@ export default function Line() {
   )
 
   return (
-    <Card className='w-full p-4 pb-2'>
-      <CardContent className='p-0'>
-        <ChartContainer config={chartConfig}>
-          <LineChart data={IncomeTableData}>
-            <ChartTooltip content={<ChartTooltipContent />} />
-            <ChartLegend
-              content={
-                <ChartLegendContent
-                  defaultLegendsValue={legends}
-                  onClickLegend={onClickLegend}
-                />
-              }
-            />
-            <CartesianGrid strokeDasharray='3 3' className='stroke-muted' />
-            <XAxis
-              dataKey='month'
-              stroke='#888888'
-              fontSize={12}
-              tickFormatter={(label) => {
-                const txt = label.toString()
-                return txt.length > 3 ? txt.slice(0, 3) : txt
-              }}
-            />
-            <YAxis
-              stroke='#888888'
-              fontSize={12}
-              tickFormatter={(label) =>
-                formatNumber(+label, 'CNY').slice(0, -3)
-              }
-            />
-            <Tooltip />
-            {legends.map((row, index) => (
-              <RLine
-                type='monotone'
-                dot={{ r: 4 }}
-                strokeWidth={2}
-                activeDot={{ r: 6 }}
-                dataKey={row.key}
-                hide={!row.visible}
-                stroke={getColor(index)}
+    <Card title='数据走势' description='2025年收入表中重要数据走势'>
+      <ChartContainer config={chartConfig}>
+        <LineChart data={IncomeTableData}>
+          <ChartTooltip content={<ChartTooltipContent />} />
+          <ChartLegend
+            content={
+              <ChartLegendContent
+                defaultLegendsValue={legends}
+                onClickLegend={onClickLegend}
               />
-            ))}
-          </LineChart>
-        </ChartContainer>
-      </CardContent>
+            }
+          />
+          <CartesianGrid strokeDasharray='3 3' className='stroke-muted' />
+          <XAxis
+            dataKey='month'
+            stroke='#888888'
+            fontSize={12}
+            tickFormatter={(label) => {
+              const txt = label.toString()
+              return txt.length > 3 ? txt.slice(0, 3) : txt
+            }}
+          />
+          <YAxis
+            stroke='#888888'
+            fontSize={12}
+            tickFormatter={(label) =>
+              formatNumber(+label, 'CNY').slice(0, -3)
+            }
+          />
+          <Tooltip />
+          {legends.map((row, index) => (
+            <RLine
+              type='monotone'
+              dot={{ r: 4 }}
+              strokeWidth={2}
+              activeDot={{ r: 6 }}
+              dataKey={row.key}
+              hide={!row.visible}
+              stroke={getColor(index)}
+            />
+          ))}
+        </LineChart>
+      </ChartContainer>
     </Card>
   )
 }

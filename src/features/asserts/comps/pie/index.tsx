@@ -1,7 +1,6 @@
 import { PieChart, Pie as RPie, Cell } from 'recharts'
 import { ColumnKeys, getColumnAlias, i18n, type TColumnKeys, type Ti18n } from '@/lib/const'
 import { isMobile, getColor } from '@/lib/utils'
-import { Card, CardContent } from '@/components/ui/card'
 import {
   ChartContainer,
   ChartTooltip,
@@ -9,8 +8,11 @@ import {
   ChartLegend,
   ChartLegendContent,
 } from '@/components/ui/chart'
+import Card from '@/components/base-card'
 
 interface Props<T extends Record<string, number>> {
+  title: string
+  description: string
   data: T
   dataKeys?: (keyof T)[]
 }
@@ -44,25 +46,23 @@ export default function Pie<T extends Record<string, number>>(props: Props<T>) {
   )
 
   return (
-    <Card className='py-0 lg:py-2'>
-      <CardContent className='p-0'>
-        <ChartContainer config={chartConfig}>
-          <PieChart margin={{ top: isMobile() ? 26 : 16, bottom: 10 }}>
-            <ChartTooltip content={<ChartTooltipContent />} />
-            <ChartLegend className='mt-4' content={<ChartLegendContent />} />
-            <RPie
-              data={data}
-              dataKey="value"
-              nameKey="name"
-              label={({ name, percent }) =>
-                `${getLabel(name)}: ${(percent * 100).toFixed(0)}%`
-              }
-            >
-              {data.map((row, index) => <Cell key={`cell-${row.name}`} fill={getColor(index)} />)}
-            </RPie>
-          </PieChart>
-        </ChartContainer>
-      </CardContent>
+    <Card title={props.title} description={props.description}>
+      <ChartContainer config={chartConfig}>
+        <PieChart margin={{ top: isMobile() ? 26 : 16, bottom: 10 }}>
+          <ChartTooltip content={<ChartTooltipContent />} />
+          <ChartLegend className='mt-4' content={<ChartLegendContent />} />
+          <RPie
+            data={data}
+            dataKey="value"
+            nameKey="name"
+            label={({ name, percent }) =>
+              `${getLabel(name)}: ${(percent * 100).toFixed(0)}%`
+            }
+          >
+            {data.map((row, index) => <Cell key={`cell-${row.name}`} fill={getColor(index)} />)}
+          </RPie>
+        </PieChart>
+      </ChartContainer>
     </Card>
   )
 }
