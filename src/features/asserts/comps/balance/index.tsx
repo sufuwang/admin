@@ -2,6 +2,7 @@ import { BalanceTableSum } from '@/data/asserts'
 import Pie from '../pie'
 import Line from './line'
 import Table from './table'
+import BalanceCNYTrend from './balanceCNYTrend'
 
 export default function Resume() {
   return (
@@ -15,6 +16,7 @@ export default function Resume() {
           data={BalanceTableSum}
           dataKeys={['totalIncome', 'totalOutcome']}
         />
+        <BalanceCNYTrend />
       </div>
     </>
   )
