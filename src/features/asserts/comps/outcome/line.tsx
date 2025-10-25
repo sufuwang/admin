@@ -70,7 +70,7 @@ export default function Line() {
           <ChartLegend
             content={
               <ChartLegendContent
-                defaultLegendsValue={defaultLegends}
+                defaultLegendsValue={legends}
                 onClickLegend={onClickLegend}
               />
             }
