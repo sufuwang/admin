@@ -1,9 +1,8 @@
-import { useSearch } from '@tanstack/react-router'
+import { useSearch, Link } from '@tanstack/react-router'
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
@@ -17,16 +16,21 @@ export function SignIn() {
     <AuthLayout>
       <Card className='gap-4'>
         <CardHeader>
-          <CardTitle className='text-lg tracking-tight'>Sign in</CardTitle>
+          <CardTitle className='text-lg tracking-tight'>登录账户</CardTitle>
           <CardDescription>
-            Enter your email and password below to <br />
-            log into your account
+            没有账户?&nbsp;去
+            <Link
+              to='/sign-up'
+              className='hover:text-primary underline underline-offset-4'
+            >
+              创建
+            </Link>
           </CardDescription>
         </CardHeader>
         <CardContent>
           <UserAuthForm redirectTo={redirect} />
         </CardContent>
-        <CardFooter>
+        {/* <CardFooter>
           <p className='text-muted-foreground px-8 text-center text-sm'>
             By clicking sign in, you agree to our{' '}
             <a
@@ -44,7 +48,7 @@ export function SignIn() {
             </a>
             .
           </p>
-        </CardFooter>
+        </CardFooter> */}
       </Card>
     </AuthLayout>
   )
