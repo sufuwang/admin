@@ -17,7 +17,6 @@ import { ThemeProvider } from './context/theme-provider'
 import { routeTree } from './routeTree.gen'
 // Styles
 import './styles/index.css'
-import { Toaster } from "@/components/ui/sonner"
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -90,17 +89,16 @@ const rootElement = document.getElementById('root')!
 if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)
   root.render(
-    <StrictMode>
+    // <StrictMode>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
           <FontProvider>
             <DirectionProvider>
               <RouterProvider router={router} />
-              <Toaster />
             </DirectionProvider>
           </FontProvider>
         </ThemeProvider>
       </QueryClientProvider>
-    </StrictMode>
+    // </StrictMode>
   )
 }

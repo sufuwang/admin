@@ -1,4 +1,5 @@
-import axios from 'axios';
+import { useAuthStore } from '@/stores/auth-store';
+import axios, { type AxiosRequestConfig } from 'axios';
 import { toast } from "sonner"
 
 // 创建 axios 实例
@@ -35,7 +36,16 @@ let isRefreshing = false;
 let requestQueue: Array<(token: string) => void> = [];
 
 http.interceptors.response.use(
-  (response) => response.data,
+  (response) => {
+    const { data } = response.data
+    if (data?.access_token) {
+      useAuthStore.getState().auth.setAccessToken(data.access_token)
+    }
+    if (data?.redirect_url) {
+      window.location.href = data.redirect_url
+    }
+    return data
+  },
   async (error) => {
     const { response, config } = error;
 
@@ -109,4 +119,20 @@ http.interceptors.response.use(
   }
 );
 
-export default http;
+export default async function request<T = unknown>(
+  config: AxiosRequestConfig,
+): Promise<T> {
+  return (http.request(config)) as unknown as T;
+}
+
+request.get = <T = unknown>(url: string, config?: AxiosRequestConfig) =>
+  request<T>({ ...config, method: 'GET', url });
+
+request.post = <T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig) =>
+  request<T>({ ...config, method: 'POST', url, data });
+
+request.put = <T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig) =>
+  request<T>({ ...config, method: 'PUT', url, data });
+
+request.delete = <T = unknown>(url: string, config?: AxiosRequestConfig) =>
+  request<T>({ ...config, method: 'DELETE', url })

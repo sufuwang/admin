@@ -19,4 +19,13 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  server: {
+    proxy: {
+      '/user': {
+        target: 'https://x.sufu.site/user',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
 })

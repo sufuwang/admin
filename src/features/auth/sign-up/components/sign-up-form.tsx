@@ -51,20 +51,17 @@ export function SignUpForm({
     },
   })
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
+  async function onSubmit(data: z.infer<typeof formSchema>) {
     setIsLoading(true)
-    // eslint-disable-next-line no-console
-    console.log(data)
-
-    http.post('/user/register', {
-      username: data.username,
-      email: data.email,
-      password: data.password,
-    })
-
-    setTimeout(() => {
+    try {
+      http.post('/user/register', {
+        username: data.username,
+        email: data.email,
+        password: data.password,
+      })
+    } finally {
       setIsLoading(false)
-    }, 3000)
+    }
   }
 
   return (
