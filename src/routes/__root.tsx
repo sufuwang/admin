@@ -13,7 +13,7 @@ import { useEffect } from 'react'
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
 }>()({
-  beforeLoad: async () => {
+  beforeLoad: () => {
     const whiteList = ['/sign-in', '/sign-up']
     if (!whiteList.includes(location.pathname) && !useAuthStore.getState().auth.accessToken) {
       http.get('/user/auth')

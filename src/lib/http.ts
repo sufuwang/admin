@@ -52,6 +52,9 @@ http.interceptors.response.use(
     // 网络异常
     if (!response) {
       toast.error('网络异常，请检查网络连接');
+      setTimeout(() => {
+        window.location.href = '/sign-in'
+      }, 1000)
       return Promise.reject(error);
     }
 
