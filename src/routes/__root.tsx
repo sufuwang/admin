@@ -9,6 +9,7 @@ import { NotFoundError } from '@/features/errors/not-found-error'
 import { useAuthStore } from '@/stores/auth-store'
 import http from '@/lib/http'
 import { useEffect } from 'react'
+import { Analytics } from "@vercel/analytics/react"
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
@@ -32,8 +33,9 @@ export const Route = createRootRouteWithContext<{
       <>
         <NavigationProgress />
         <Outlet />
+        <Analytics />
         <Toaster duration={5000} />
-        {import.meta.env.MODE === 'development' && (
+        {import.meta.env.MODE === 'dev' && (
           <>
             <ReactQueryDevtools buttonPosition='bottom-left' />
             <TanStackRouterDevtools position='bottom-right' />
