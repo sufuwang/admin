@@ -10,6 +10,7 @@ import { useAuthStore } from '@/stores/auth-store'
 import http from '@/lib/http'
 import { useEffect } from 'react'
 import { Analytics } from "@vercel/analytics/react"
+import { SpeedInsights } from "@vercel/speed-insights/react"
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
@@ -34,6 +35,7 @@ export const Route = createRootRouteWithContext<{
         <NavigationProgress />
         <Outlet />
         <Analytics />
+        <SpeedInsights />
         <Toaster duration={5000} />
         {import.meta.env.MODE === 'dev' && (
           <>
