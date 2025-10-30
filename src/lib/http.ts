@@ -54,14 +54,22 @@ http.interceptors.response.use(
       toast.error('网络异常，请检查网络连接');
       setTimeout(() => {
         window.location.href = '/sign-in'
-      }, 1000)
+      }, 600)
       return Promise.reject(error);
     }
 
-    const { status } = response;
+    const { status, data } = response;
 
     // access_token 过期
     if (status === 401 && !config._retry) {
+      if (data.message) {
+        toast.error(data.message)
+      }
+      setTimeout(() => {
+        window.location.href = '/sign-in'
+      }, 600)
+      return Promise.reject(error);
+
       config._retry = true;
 
       if (isRefreshing) {
@@ -111,7 +119,7 @@ http.interceptors.response.use(
         toast.error('接口地址不存在');
         break;
       case 500:
-        toast.error(response.data.message ?? '服务器内部错误');
+        toast.error(data.message ?? '服务器内部错误');
         break;
       default:
         toast.error(`请求错误：${status}`);
