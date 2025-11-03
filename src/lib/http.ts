@@ -64,6 +64,8 @@ http.interceptors.response.use(
     if (status === 401 && !config._retry) {
       if (data.message) {
         toast.error(data.message)
+      } else {
+        toast.error('请重新登录！')
       }
       setTimeout(() => {
         window.location.href = '/sign-in'
