@@ -2,6 +2,7 @@ import {
   LayoutDashboard,
   Wallet,
   ChartCandlestick,
+  Bot,
 } from 'lucide-react'
 import { type SidebarData } from '../types'
 
@@ -37,11 +38,11 @@ export const sidebarData: SidebarData = {
           url: '/investment',
           icon: ChartCandlestick,
         },
-        // {
-        //   title: 'Apps',
-        //   url: '/apps',
-        //   icon: Package,
-        // },
+        {
+          title: '机器人',
+          url: '/chats',
+          icon: Bot,
+        },
         // {
         //   title: 'Chats',
         //   url: '/chats',
