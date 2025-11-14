@@ -19,6 +19,20 @@ http.interceptors.request.use(
     // const token = localStorage.getItem('access_token');
     // if (token) config.headers.Authorization = `Bearer ${token}`;
 
+    if (config.url?.startsWith('/dify')) {
+      config.url = config.url.replace('/dify', 'https://api.dify.ai/v1')
+      config.headers.Authorization = `Bearer ${import.meta.env.VITE_DIFY_KEY}`
+      config.withCredentials = false
+
+      if (config.method === 'get') {
+        config.params = {
+          ...(config.params || {}),
+          user: import.meta.env.VITE_DIFY_USER,
+          conversation_id: import.meta.env.VITE_DIFY_CONSERVATION_ID
+        };
+      }
+    }
+
     // 防止 GET 缓存
     if (config.method === 'get') {
       config.params = { ...(config.params || {}), _t: Date.now() };
