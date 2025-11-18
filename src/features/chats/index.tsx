@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Fragment } from 'react/jsx-runtime'
 import { format } from 'date-fns'
-import { Send, LoaderCircle } from 'lucide-react'
+import { Send, Pause, LoaderCircle } from 'lucide-react'
 import http from '@/lib/http'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -24,14 +24,26 @@ export function Chats() {
   const loadingRef = useRef<boolean>(false)
   const [history, setHistory] = useState<HistoryRow[]>([])
   const [question, setQuestion] = useState('')
+  const [curTaskId, setCurTaskId] = useState('')
   const [loading, setLoading] = useState(false)
 
   const onQuestionChange = ({ target }: { target: HTMLInputElement }) => {
     setQuestion(target.value)
   }
+  const stopStream = async () => {
+    await http.post(`/dify/chat-messages/${curTaskId}/stop`, {
+      user: import.meta.env.VITE_DIFY_USER,
+    })
+    setLoading(false)
+    setCurTaskId('')
+  }
   const onConfirm = async (query = question) => {
     if (loadingRef.current) {
-      toast.warning('正在处理，请稍等')
+      if (curTaskId.length) {
+        stopStream()
+      } else {
+        toast.warning('正在处理，请稍等')
+      }
       return
     }
     if (query.length === 0) {
@@ -69,12 +81,16 @@ export function Chats() {
         setLoading(false)
         break
       };
-      row.answer += decoder.decode(value)
+      const rows = decoder.decode(value)
         .split('\n')
         .filter(r => r && r.startsWith('data: ') && r.includes(`"event":"message"`))
-        .map(r => JSON.parse(r.replace('data: ', '')).answer)
-        .join('')
+        .map(r => JSON.parse(r.replace('data: ', '')))
+      row.answer += rows.map(row => row.answer).join('')
+      row.created_at = rows[0]?.created_at ?? row.created_at
 
+      if (rows[0]?.task_id) {
+        setCurTaskId(rows[0].task_id)
+      }
       if (historyRef.current.at(0)?.id === row.id) {
         setHistory([row, ...historyRef.current.slice(1)])
       } else {
@@ -175,7 +191,11 @@ export function Chats() {
                   />
                 </label>
                 <Button variant='ghost' size='icon' onClick={() => onConfirm()}>
-                  {loading ? <LoaderCircle className='animate-spin' size={20} /> : <Send size={20} />}
+                  {loading
+                    ? curTaskId
+                      ? <Pause size={20} />
+                      : <LoaderCircle className='animate-spin' size={20} />
+                    : <Send size={20} />}
                 </Button>
               </div>
             </div>
