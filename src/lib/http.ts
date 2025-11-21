@@ -21,7 +21,7 @@ http.interceptors.request.use(
 
     if (config.url?.startsWith('/dify')) {
       config.timeout = 10000 * 60 * 3
-      config.url = config.url.replace('/dify', 'https://api.dify.ai/v1')
+      config.url = config.url.replace('/dify', import.meta.env.VITE_DIFY_DOMAIN)
       config.headers.Authorization = `Bearer ${import.meta.env.VITE_DIFY_KEY}`
       config.withCredentials = false
 

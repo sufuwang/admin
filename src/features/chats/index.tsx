@@ -52,7 +52,7 @@ export function Chats() {
     }
     setLoading(true)
     setQuestion('')
-    const response = await fetch('https://api.dify.ai/v1/chat-messages', {
+    const response = await fetch(`${import.meta.env.VITE_DIFY_DOMAIN}/chat-messages`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${import.meta.env.VITE_DIFY_KEY}`,
