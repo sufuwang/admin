@@ -98,6 +98,13 @@ export const IncomeTableData: TIncomeTableRow[] = [
     wageIncome: 8941.63,
     fundIncome: 960,
   },
+  {
+    year: 2025,
+    month: 'November',
+    wageIncome: 8961.44,
+    fundIncome: 1161.22,
+    otherIncome: 8055.82,
+  },
 ].map(row => {
   const totalPureIncome = row.wageIncome + (row.fundIncome ?? 0) + (row.partTimeIncome ?? 0) + (row.investmentIncome ?? 0) + (row.otherIncome ?? 0)
   const totalIncome = totalPureIncome + (row.transferIncome ?? 0)
@@ -256,6 +263,19 @@ export const OutcomeTableData: TOutcomeTableRow[] = [
     otherOutcome: 804.73,
     comment: '归还转移支付（150000）小米手机（2564.05）、西安小区物业费（5500）'
   },
+  {
+    year: 2025,
+    month: 'November',
+    loans: [{ value: 562.60, header: '房贷还款' }],
+    houseOutcome: 107.62,
+    foodOutcome: 1655.49,
+    relativeOutcome: 1142.18,
+    transportOutcome: 722.90,
+    specialOutcome: 0,
+    bulkOutcome: 800,
+    otherOutcome: 2898.1,
+    comment: '四姑娘山（800）'
+  },
 ].map(row => {
   const outcomeSum = Object.entries(row)
     .filter(([key]) => key.endsWith('Outcome'))
@@ -392,6 +412,15 @@ export const BalanceTableData: TBalanceTableRow[] = [
       { abbr: 'HKD', value: 12373.54 }
     ],
     loans: [{ value: 116076.37, header: '剩余房贷' }],
+  },
+  {
+    year: 2025,
+    month: 'November',
+    balances: [
+      { abbr: 'CNY', value: 96544.43, MoM: 11012.49 },
+      { abbr: 'HKD', value: 12545.45 }
+    ],
+    loans: [{ value: 115826.85, header: '剩余房贷' }],
   },
 ].map(row => {
   row.totalIncome = IncomeTableData.find(r => r.year === row.year && r.month === row.month)?.totalIncome
